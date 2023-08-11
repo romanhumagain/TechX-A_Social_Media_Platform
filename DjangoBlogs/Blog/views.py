@@ -5,7 +5,7 @@ from Blog.models import *
 
 def home(request):
   context = {
-    'posts':BlogPost.objects.all()
+    'posts':BlogPost.objects.order_by('-date_posted')
   }
   return render(request ,'blog/home.html',context )
 

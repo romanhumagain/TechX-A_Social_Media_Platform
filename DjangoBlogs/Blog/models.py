@@ -9,7 +9,7 @@ class BlogPost(models.Model):
   # slug = models.SlugField(null=True,unique=True)
   title = models.CharField(max_length=100)
   content = models.TextField()
-  date_posted = models.DateField(default = timezone.now)
+  date_posted = models.DateTimeField(default = timezone.now)
   
   # to create the slug field..
   '''def save(self , *args , **kwargs):
