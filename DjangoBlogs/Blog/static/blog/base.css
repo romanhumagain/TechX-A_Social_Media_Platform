@@ -1,0 +1,214 @@
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #dddddd;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+
+.article-title {
+  color: #444444;
+  text-decoration: none;
+}
+
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-content {
+  white-space: pre-line;
+  font-size: small;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3;
+  text-decoration: none;
+  
+}
+
+.article-metadata a:hover {
+  color: #333;
+  text-decoration: none;
+}
+
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.account-img {
+  height: 125px;
+  width: 125px;
+  margin-right: 20px;
+  margin-bottom: 16px;
+}
+
+.account-heading {
+  font-size: 2.5rem;
+}
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #f8f9fa;
+}
+
+.navbar {
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+  font-weight: 700;
+}
+
+.navbar .nav-link {
+  color: #333;
+}
+
+.content-section {
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 5px;
+  background-color: #fff;
+}
+
+.list-group-item-light {
+  background-color: #f8f9fa;
+}
+.text-muted{
+  font-weight: lighter;
+}
+.stylish-sidebar {
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  background: linear-gradient(145deg, #f8f8f8, #eee9e9);
+}
+
+.stylish-sidebar h3 {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.list-group-item-action {
+  transition: all 0.3s;
+}
+
+.list-group-item-action:hover {
+  background-color: #f5f5f5;
+}
+
+.list-group-item-action i {
+  margin-right: 10px;
+}
+
+
+
+/* General Styling for the entire body to apply Open Sans */
+body {
+  font-family: 'Open Sans', sans-serif;
+}
+
+/* Metadata Styling */
+.article-metadata {
+  margin-bottom: 15px;
+}
+
+.article-metadata a {
+  font-weight: normal;   /* not bold */
+  color: #428bca;  /* deep gray */
+  text-decoration: none;  /* removes underline */
+}
+
+.article-metadata a:hover {
+  color: #428bca;
+  text-decoration: underline;  /* adds underline on hover for better UX */
+}
+
+/* Styling for the post title */
+.article-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #333;
+  text-decoration: none;
+  margin-top: 10px;
+  display: block;
+}
+
+.article-title:hover {
+  text-decoration: underline;
+}
+
+/* Styling for the post content */
+.article-content {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #555;
+  margin-top: 20px;
+}
+
+/* Styling for the media content section for a slight spacing */
+.media.content-section {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+footer {
+  color: #0b0b0b; /* light color for the text */
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+/* -------for logo--------- */
+.logo-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 24px;
+  letter-spacing: 1px;
+  position: relative;
+  color: #fbf5f5;
+  text-shadow: 2px 2px 3px rgba(0,0,0,0.2);
+  transition: all 0.3s;
+}
+
+.logo-text:hover {
+  text-shadow: 2px 2px 3px rgba(0,0,0,0.5);
+  transform: scale(1.05);
+}
+
+.logo-highlight {
+  font-size: 24px;
+
+/* The text color is set to transparent so only the background shows. */
+color: transparent; 
+
+/* This gradient defines the sequence of colors the text will cycle through. */
+background: linear-gradient(45deg, #F39C12, #E74C3C, #9B59B6, #3498DB);
+
+/* This clips the background to the text. */
+-webkit-background-clip: text;
+background-clip: text; 
+
+/* This animation changes the position of the background, making it look like the text is changing color. */
+animation: colors 5s infinite alternate;
+}
+
+@keyframes colors {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+
