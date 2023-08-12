@@ -211,4 +211,36 @@ animation: colors 5s infinite alternate;
   100% { background-position: 100% 50%; }
 }
 
+.alert-custom {
+  padding: 5px 15px;
+  font-size: 0.8rem;  /* Adjust as required */
+}
+
+/* for user home page to show the profile */
+  .user-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        background-color: rgba(0, 0, 0, 0.2); /* Slight transparent background */
+        border-radius: 15px;
+        transition: background-color 0.3s ease;
+    }
+
+    .user-badge:hover {
+        background-color: rgba(0, 0, 0, 0.4); /* Darker on hover */
+    }
+
+    .user-badge i {
+        margin-right: 5px;
+    }
+
+    /* If crispy_forms is using label.required for required fields */
+label.required:after {
+  color: red;
+}
+
+/* If there's a specific structure like a span for asterisks (which can be the case for some crispy_forms layouts) */
+label span.required, label span.asteriskField {
+  color: red;
+}
+
 

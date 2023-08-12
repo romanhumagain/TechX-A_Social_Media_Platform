@@ -5,7 +5,7 @@ from Blog.utils import generate_slugs
 
 # Create your models here.
 class BlogPost(models.Model):
-  author = models.ForeignKey(User , on_delete=models.CASCADE)
+  author = models.ForeignKey(User , on_delete=models.CASCADE , related_name='posts')
   # slug = models.SlugField(null=True,unique=True)
   title = models.CharField(max_length=100)
   content = models.TextField()

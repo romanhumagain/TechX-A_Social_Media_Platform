@@ -1,0 +1,31 @@
+{% extends 'blog/base.html' %}
+{% load crispy_forms_tags %}
+{% block body %}
+<div class="container">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <!-- Start of the Bootstrap card -->
+            <div class="card shadow-sm"> <!-- Added shadow-sm for subtle shadow -->
+                <div class="card-header bg-light">
+                    <h4 class="text-center text-muted mb-0">Edit Profile</h4>
+                </div>
+                <div class="card-body py-4"> <!-- Increased padding on y-axis -->
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <fieldset class="form-group mb-4"> <!-- Added margin-bottom for spacing -->
+                            {{ user_update_form|crispy }}
+                        </fieldset>
+                        <fieldset class="form-group mb-4"> <!-- Added margin-bottom for spacing -->
+                            {{ profile_update_form|crispy }}
+                        </fieldset>
+                        <div class="form-group mt-3"> <!-- Added margin-top for spacing -->
+                            <button type="submit" class="btn btn-secondary btn-block">Update Profile <i class="fas fa-user-edit"></i></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

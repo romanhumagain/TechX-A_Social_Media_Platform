@@ -1,0 +1,41 @@
+{% extends "blog/base.html" %}
+{% block body %}
+<div class="container mt-5">
+  <div class="row">
+      <div class="col-md-4 text-center">
+          <img src="{{user.profile.profile_pic.url}}" alt="{{ user.username }}'s Profile Picture" class="mb-2" style="border-radius: 50%; width: 200px; height: 200px;">
+      </div>
+      <div class="col-md-8">
+          <h2>{{ user.username }}</h2>
+          <p class="text-muted">{{ user.profile.bio }}</p>
+          <!-- Displaying Last Login Time Here -->
+          <div class="d-flex align-items-center mb-2">
+              <i class="fas fa-clock mr-2"></i>
+              <span>Last logged in: {{ user.last_login|date:"F j, Y, g:i A" }}</span>
+          </div>
+          <hr>
+          <div class="d-flex align-items-center mb-3">
+              <i class="fas fa-users mr-2"></i>
+              <span>{{ user.profile.follower }} Followers</span>
+          </div>
+          <a href="{% url 'update_profile' %}" class="btn btn-outline-secondary">
+              <i class="fas fa-user"></i> Update Profile
+          </a>
+      </div>
+  </div>
+</div>
+
+<hr>
+{% for post in posts %}
+ <article class="media content-section">
+  <div class="media-body">
+    <div class="article-metadata">
+      <a class="mr-2" href="#">{{ post.author }}</a>
+      <small class="text-muted">{{ post.date_posted|date:"j M, Y" }}</small>
+    </div>
+    <h3><a class="article-title" href="#">{{ post.title }}</a></h3>
+    <p class="article-content">{{ post.content }}</p>
+  </div>
+</article>
+{% endfor %}
+{% endblock %}
