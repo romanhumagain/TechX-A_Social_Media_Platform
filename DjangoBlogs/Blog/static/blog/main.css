@@ -233,14 +233,7 @@ animation: colors 5s infinite alternate;
         margin-right: 5px;
     }
 
-    /* If crispy_forms is using label.required for required fields */
-label.required:after {
-  color: red;
-}
-
-/* If there's a specific structure like a span for asterisks (which can be the case for some crispy_forms layouts) */
-label span.required, label span.asteriskField {
-  color: red;
-}
-
+    .custom-blog-form label {
+      margin-bottom: 10px;  /* adjust this value as needed */
+  }  
 

@@ -1,0 +1,25 @@
+{% extends "blog/base.html" %}
+{% block body %}
+<div class="content-section">
+    <div class="card ">
+        <div class="card-header bg-secondary text-white">
+            <h4>Delete Post</h4>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">Confirmation</h5>
+            <p class="card-text">
+                Are you sure you want to delete the post "<strong>{{ object.title }}</strong>"?
+            </p>
+            <form method="POST">
+                {% csrf_token %}
+                <button class="btn btn-danger" type="submit">
+                    <i class="fas fa-trash-alt"></i> Yes, Delete
+                </button>
+                <a class="btn btn-secondary" href="{% url 'post-details' object.slug %}">
+                    <i class="fas fa-times"></i> Cancel
+                </a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

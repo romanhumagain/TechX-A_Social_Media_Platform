@@ -210,3 +210,32 @@ animation: colors 5s infinite alternate;
   0% { background-position: 0% 50%; }
   100% { background-position: 100% 50%; }
 }
+
+.custom-blog-form label {
+  margin-bottom: 10px;  /* adjust this value as needed */
+}
+
+.read-more-link {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-weight: 600;
+  margin-top: 8px;
+  display: inline-block;
+}
+
+.read-more-link:hover {
+  color: #0056b3;
+}
+
+.read-more-link i {
+  margin-left: 5px;
+}
+.article-content {
+  white-space: pre-line;
+}
+
+    .follow-btn {
+        width: 120px;
+    }
+

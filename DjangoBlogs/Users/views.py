@@ -6,7 +6,8 @@ from .forms import UserRegisterForm , UserLoginForm , UserUpdateForm , ProfileUp
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
 from Blog.models import BlogPost
 
 def register_user(request):
@@ -46,22 +47,30 @@ class LoginView(View):
             messages.error(request ,'Invalid Credentials')
             return redirect('login_user')
 
-class ProfileView(LoginRequiredMixin, View):
-    def get(self, request):
-        user = request.user
-        posts = BlogPost.objects.filter(author = user).order_by('-date_posted')
-        user_update_form = UserUpdateForm()
-        profile_update_form = ProfileUpdateForm()
-        context = {
-            'title':'Profile',
-            'posts':posts,
-            'user_update_form':user_update_form,
-            'profile_update_form':profile_update_form 
-            }
+
+class ProfileDetailsView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = User
+    template_name = 'users/profile.html'
+    context_object_name = 'profile_user'
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def get_context_data(self, **kwargs):
+        context = super(ProfileDetailsView, self).get_context_data(**kwargs)
         
-        return render(request, 'users/profile.html', context)
-    
-    
+        # Add additional context
+        context['posts'] = BlogPost.objects.filter(author=self.object).order_by('-date_posted')[:5]  # Limit to 5 posts for example
+        context['title'] = 'Profile'
+        return context
+
+    def test_func(self):
+        # Check if the logged-in user is the owner of the profile.
+        # If not, deny access.
+        if self.get_object() == self.request.user:
+            return True
+        return False
+
 class UpdateProfileView(LoginRequiredMixin, View):
     def get_forms(self , request):
         user_update_form = UserUpdateForm(instance=request.user)

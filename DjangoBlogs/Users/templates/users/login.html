@@ -2,19 +2,21 @@
 {% block body %}
 {% if messages %}
 <div class="row justify-content-center">
-    <div class="col-md-6">
-        {% for message in messages %}
-        <div class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show" role="alert">
-            <!-- Added icon based on message type -->
-            <i class="{% if message.tags == 'error' %}fas fa-exclamation-circle{% elif message.tags == 'success' %}fas fa-check-circle{% elif message.tags == 'info' %}fas fa-info-circle{% elif message.tags == 'warning' %}fas fa-exclamation-triangle{% else %}fas fa-bell{% endif %} me-2"></i>
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
+  <div class="col-md-6">
+    {% for message in messages %}
+    <div
+      class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show"
+      role="alert">
+      <!-- Added icon based on message type -->
+      <i
+        class="{% if message.tags == 'error' %}fas fa-exclamation-circle{% elif message.tags == 'success' %}fas fa-check-circle{% elif message.tags == 'info' %}fas fa-info-circle{% elif message.tags == 'warning' %}fas fa-exclamation-triangle{% else %}fas fa-bell{% endif %} me-2"></i>
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
+    {% endfor %}
+  </div>
 </div>
 {% endif %}
-
 <div class="row justify-content-center">
   <div class="col-md-6">
     <div class="card shadow-lg" style="max-width: 600px;">
@@ -24,22 +26,20 @@
       <div class="card-body">
         <form method="post">
           {% csrf_token %}
-
           <div class="form-floating mb-3">
-            <input type="text" name="username" id="username" class="form-control darker-border" placeholder="Username" required style=" border-color: #727171">
+            <input type="text" name="username" id="username" class="form-control darker-border" placeholder="Username"
+              required style=" border-color: #727171">
             <label for="username">Username</label>
           </div>
-
           <div class="form-floating mb-3 position-relative">
-            <input type="password" name="password" id="password" class="form-control darker-border" placeholder="Password" required style=" border-color: #727171">
+            <input type="password" name="password" id="password" class="form-control darker-border"
+              placeholder="Password" required style=" border-color: #727171">
             <label for="password">Password</label>
             <!-- Password toggle icon -->
             <span toggle="#password"
-      class="fa fa-fw fa-eye toggle-password position-absolute top-50 translate-middle-y pl-2"
-      style="cursor:pointer; right: 10px;"></span>
-
+              class="fa fa-fw fa-eye toggle-password position-absolute top-50 translate-middle-y pl-2"
+              style="cursor:pointer; right: 10px;"></span>
           </div>
-
           <button type="submit" class="btn btn-outline-info btn-block mb-3">Login</button>
         </form>
         <div>
@@ -63,5 +63,4 @@
     });
   });
 </script>
-
 {% endblock %}

@@ -2,16 +2,45 @@
 {% block body %}
 
 {% for post in posts %}
- <article class="media content-section">
+<article class="media content-section">
   <div class="media-body">
     <div class="article-metadata">
-      <img class="rounded-circle article-img" src="{{ post.author.profile.profile_pic.url }}" style="width: 65px; height: 65px;">
-      <a class="mr-2" href="#">{{ post.author }}</a>
+      <img class="rounded-circle article-img" src="{{ post.author.profile.profile_pic.url }}"
+        style="width: 65px; height: 65px;">
+      {% if user.profile.slug == post.author.profile.slug %}
+      <a class="mr-2" href="{% url 'user_profile' %}">{{ post.author }}</a>
+      {% else %}
+      <a class="mr-2" href="{% url 'user-profile-details' post.author.profile.slug  %}">{{ post.author }}</a>
+      {% endif %}
       <small class="text-muted">{{ post.date_posted|date:"j M, Y" }}</small>
     </div>
-    <h3><a class="article-title" href="#">{{ post.title }}</a></h3>
-    <p class="article-content">{{ post.content }}</p>
+    <h3 class="mt-2"><a class="article-title" href="{% url 'post-details' post.slug %}">{{ post.title }}</a></h3>
+
+    <p class="article-content d-inline">{{ post.content|truncatewords:120 }}</p>
+
+    <!-- Check if the content's word count exceeds 120 -->
+    {% if post.content|wordcount > 120 %}
+    <a href="{% url 'post-details' post.slug %}" class="read-more-link d-inline text-decoration-none text-dark"> Read
+      More <i class="fas fa-arrow-right"></i></a>
+    {% endif %}
+    <br>
+    <!-- Comment Section -->
+    <div class="row mt-3">
+      <div class="col-8 col-md-7">
+        <textarea name="comment" class="form-control" rows="1" placeholder="Leave a comment..."></textarea>
+      </div>
+      <div class="col-2 col-md-2 d-flex align-items-center">
+        <button type="submit" class="btn btn-secondary btn-sm mr-4">
+          <i class="fas fa-paper-plane"> Add</i>
+        </button>
+      </div>
+      <div class="col-2 col-md-3 d-flex align-items-center">
+        <a href="#" class="btn btn-sm btn-outline-secondary">
+          <i class="fas fa-comment-alt"></i> Comment
+        </a>
+      </div>
+    </div>
   </div>
 </article>
 {% endfor %}
- {% endblock body %}
+{% endblock body %}
