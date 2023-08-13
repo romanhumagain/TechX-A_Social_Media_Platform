@@ -1,7 +1,8 @@
 from django.db import models
 from django.forms.models import BaseModelForm
-from django.shortcuts import render
+from django.shortcuts import get_object_or_404, render , redirect
 from django.views import View
+from django.contrib import messages
 from django.views.generic import ListView , DetailView , CreateView, UpdateView , DeleteView
 from . forms import BlogPostForm
 from django.http import HttpResponse
@@ -65,6 +66,24 @@ class UserProfileDetailsView(LoginRequiredMixin, View):
             'posts':posts,
             }
         return render(request, 'blog/view_other_profile.html', context)
+      
+      
+class PostCommentView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        post = get_object_or_404(BlogPost, slug=kwargs.get('slug'))
+        
+        comment_text = request.POST.get('comment')
+
+        if not comment_text:
+            messages.error(request, "Comment cannot be empty!")
+            return redirect('post-details', slug=post.slug) 
+
+        BlogComment.objects.create(user=request.user, post=post, comment=comment_text)
+        
+        messages.success(request, "Successfully added comment!")
+        return redirect('post-details', slug=post.slug)
+    
+    
   
 def about(request):
   return render(request ,'blog/about.html',{'title':"About"} )

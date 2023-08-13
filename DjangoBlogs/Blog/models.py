@@ -4,6 +4,7 @@ from django.contrib.auth.models import User
 from Blog.utils import generate_slugs
 from django.urls import reverse
 # Create your models here.
+
 class BlogPost(models.Model):
   author = models.ForeignKey(User , on_delete=models.CASCADE , related_name='posts')
   slug = models.SlugField(null=True,unique=True)
@@ -23,6 +24,19 @@ class BlogPost(models.Model):
   
   def get_absolute_url(self):
     return reverse('post-details' , kwargs={'slug':self.slug})
+  
+class BlogComment(models.Model):
+  user = models.ForeignKey(User , on_delete=models.CASCADE)
+  post = models.ForeignKey(BlogPost , on_delete=models.CASCADE)
+  comment = models.TextField()
+  parent_comment = models.ForeignKey('self' , on_delete=models.CASCADE , null=True )
+  comment_posted_date = models.DateTimeField(default= timezone.now)
+  
+  def __str__(self) -> str:
+    return "comment by " + self.user.username + "on " + self.post.title
+  
+  
+  
     
   
   

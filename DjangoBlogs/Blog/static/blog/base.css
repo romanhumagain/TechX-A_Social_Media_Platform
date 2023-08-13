@@ -238,4 +238,34 @@ animation: colors 5s infinite alternate;
     .follow-btn {
         width: 120px;
     }
+    .read-more-link {
+      transition: color 0.2s, transform 0.2s;
+  }
+  
+  .read-more-link:hover {
+      color: #007BFF;  /* Change this to your desired hover color */
+      transform: translateX(5px);
+  }
 
+  .custom-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007BFF; /* You can choose your own color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
+
+.custom-btn:hover {
+    background-color: #0056b3; /* Darker shade for hover effect */
+}
+
+.custom-btn i {
+    margin-right: 5px; /* Creates a little space between the icon and text */
+}
+
+  

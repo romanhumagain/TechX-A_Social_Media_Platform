@@ -1,12 +1,50 @@
 {% extends 'blog/base.html' %}
 {% block body %}
+<style>
+  .icons-container {
+    text-align: center; /* This centers the inner content */
+    margin-top: 20px; /* Add some top margin for spacing */
+}
 
+.icon-link {
+    display: inline-block;
+    padding: 15px; /* Increased padding for larger touch area */
+    color: #2D2D2D; /* Dark gray */
+    font-size: 25px; /* Increased font-size for bigger icons */
+    transition: color 0.3s, transform 0.2s;
+    margin: 0 15px; /* Increased spacing between icons */
+    position: relative; /* Relative position to allow absolute positioning of child elements */
+}
+
+.icon-count {
+    position: absolute;
+    top: 50%;
+    right: -10px; /* Adjust based on your preference */
+    transform: translateY(-50%); /* Center vertically */
+    font-size: 14px; /* Font size for the count */
+    color: #007BFF; /* Color for the count */
+}
+
+.icon-link:hover {
+    color: #007BFF; /* Change to any color you prefer on hover */
+    transform: scale(1.1); /* Slightly enlarge the icon on hover */
+}
+
+/* Optional: You can add individual colors to specific icons if desired */
+.icon-link.comment-icon:hover {
+    color: #FF5733; /* Example color for comment */
+}
+
+.icon-link.share-icon:hover {
+    color: #33FF57; /* Example color for share */
+}
+
+</style>
 {% for post in posts %}
 <article class="media content-section">
   <div class="media-body">
     <div class="article-metadata">
-      <img class="rounded-circle article-img" src="{{ post.author.profile.profile_pic.url }}"
-        style="width: 65px; height: 65px;">
+      <img class="rounded-circle article-img" src="{{ post.author.profile.profile_pic.url }}" style="width: 65px; height: 65px;">
       {% if user.profile.slug == post.author.profile.slug %}
       <a class="mr-2" href="{% url 'user_profile' %}">{{ post.author }}</a>
       {% else %}
@@ -18,29 +56,33 @@
 
     <p class="article-content d-inline">{{ post.content|truncatewords:120 }}</p>
 
-    <!-- Check if the content's word count exceeds 120 -->
+   <!-- Check if the content's word count exceeds 120 -->
     {% if post.content|wordcount > 120 %}
-    <a href="{% url 'post-details' post.slug %}" class="read-more-link d-inline text-decoration-none text-dark"> Read
-      More <i class="fas fa-arrow-right"></i></a>
+    <a href="{% url 'post-details' post.slug %}" class=" d-inline text-dark" style="font-weight: lighter;">Read More</a>
     {% endif %}
-    <br>
-    <!-- Comment Section -->
-    <div class="row mt-3">
-      <div class="col-8 col-md-7">
-        <textarea name="comment" class="form-control" rows="1" placeholder="Leave a comment..."></textarea>
-      </div>
-      <div class="col-2 col-md-2 d-flex align-items-center">
-        <button type="submit" class="btn btn-secondary btn-sm mr-4">
-          <i class="fas fa-paper-plane"> Add</i>
-        </button>
-      </div>
-      <div class="col-2 col-md-3 d-flex align-items-center">
-        <a href="#" class="btn btn-sm btn-outline-secondary">
-          <i class="fas fa-comment-alt"></i> Comment
-        </a>
-      </div>
-    </div>
-  </div>
+</div>
+
+<div class="icons-container">
+  <!-- Like Icon -->
+  <a href="#" class="icon-link">
+    <i class="fas fa-thumbs-up"></i>
+    <span class="icon-count">123</span> <!-- Example count for likes -->
+  </a>
+
+  <!-- Comment Icon -->
+  <a href="#" class="icon-link comment-icon">
+    <i class="fas fa-comment"></i>
+    <span class="icon-count">45</span> <!-- Example count for comments -->
+  </a>
+
+  <!-- Share Icon -->
+  <a href="#" class="icon-link share-icon">
+    <i class="fas fa-share-alt"></i>
+    <span class="icon-count">67</span> <!-- Example count for shares -->
+  </a>
+</div>
+
+  
 </article>
 {% endfor %}
 {% endblock body %}
