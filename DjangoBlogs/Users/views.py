@@ -1,3 +1,5 @@
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from django.http import Http404
 from django.shortcuts import render, redirect
 from django.contrib import messages
 from django.views import View
@@ -9,6 +11,7 @@ from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
 from Blog.models import BlogPost
+from django.core.paginator import Paginator
 
 def register_user(request):
     if request.method == 'POST':
@@ -60,7 +63,20 @@ class ProfileDetailsView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         context = super(ProfileDetailsView, self).get_context_data(**kwargs)
         
         # Add additional context
-        context['posts'] = BlogPost.objects.filter(author=self.object).order_by('-date_posted')[:5]  # Limit to 5 posts for example
+        posts = BlogPost.objects.filter(author=self.object).order_by('-date_posted')
+        
+        paginator = Paginator(posts, 5) # Show 2 posts per page
+        page = self.request.GET.get('page', 1)
+        try:
+            page_obj = paginator.page(page)
+        except PageNotAnInteger:
+            # If page is not an integer, serve the first page
+            page_obj = paginator.page(1)
+        except EmptyPage:
+            # If page is out of range (e.g. 9999), serve the last page of results
+            page_obj = paginator.page(paginator.num_pages)
+        
+        context['page_obj'] = page_obj
         context['title'] = 'Profile'
         return context
 

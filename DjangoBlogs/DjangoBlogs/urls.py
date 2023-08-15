@@ -21,10 +21,15 @@ from Users.urls import *
 from django.conf import settings
 from django.conf.urls.static import static
 
+admin.site.site_header = "TechBlog Admin - Roman"
+admin.site.site_title = "TechBlog Admin Panel"
+admin.site.index_title = "TechBlog Admin Panel"
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path('admin/site', admin.site.urls),
     path('' , include('Blog.urls')),
-    path('user/' , include('Users.urls'))
+    path('user/' , include('Users.urls')),
+    
 ]
 
 if settings.DEBUG:

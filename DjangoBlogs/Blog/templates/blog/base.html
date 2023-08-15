@@ -10,7 +10,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
     {% if title %}
-    <title>Django Blog - {{title}}</title>
+    <title>Tech Blog - {{title}}</title>
     {% else %}
     <title>Django Blog</title>
     {% endif %}
@@ -21,7 +21,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
 
 </head>
+<style>
+   .stylish-sidebar {
+    background-color: #f8f9fa;  /* Light gray background */
+    padding: 20px;
+    border-radius: 10px;  /* Rounded corners for the sidebar */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);  /* A subtle shadow for depth */
+}
 
+.stylish-sidebar .btn-outline-secondary {
+    border-color: #adb5bd;  /* Adjusting border color to be more subtle */
+}
+
+.stylish-sidebar a.text-dark:hover {
+    color: #007bff !important;  /* Overriding default color for hover effect */
+}
+
+</style>
 <body>
     <nav class="navbar navbar-expand-lg navbar-light bg-secondary text-white">
 
@@ -73,23 +89,54 @@
             </div>
             <div class="col-md-4 order-first order-md-2 d-none d-md-inline-block">
                 <div class="content-section stylish-sidebar">
-                    <h3><i class="fas fa-bars"></i> Our Sidebar</h3>
-                    <p class='text-muted'>You can put any information here you'd like.</p>
-                    <ul class="list-group mt-3">
+                    <h3 class="mb-4"><i class="fas fa-bars"></i> Explore More</h3>
+                    
+                    {% block search_bar %}
+                    
+                    {% endblock %}
+
+                
+                    <!-- Social Media Integration -->
+                    <div class="mb-4">
+                        <h5>Follow Us</h5>
+                        <div class="d-flex justify-content-around">
+                            <a href="#" class="text-decoration-none">
+                                <i class="fab fa-facebook-f" style="color: #1877F2;"></i>
+                            </a>
+                            <a href="#" class="text-decoration-none">
+                                <i class="fab fa-twitter" style="color: #1DA1F2;"></i>
+                            </a>
+                            <a href="#" class="text-decoration-none">
+                                <i class="fab fa-linkedin-in" style="color: #0A66C2;"></i>
+                            </a> 
+                            <a href="#" class="text-decoration-none">
+                                <i class="fab fa-instagram" style="color: #C13584;"></i>
+                            </a>
+                        </div>
+                        
+                    </div>
+                
+                    <!-- Trending Topics -->
+                    <h5 class="mb-3">Trending Topics</h5>
+                    <ul class="list-group mb-4">
+                        <!-- Using the list-group-flush class removes borders and rounded corners to render list group items edge-to-edge in a parent container. -->
                         <li class="list-group-item list-group-item-action">
-                            <i class="fas fa-newspaper"></i> Latest Posts
+                            <i class="fas fa-rocket"></i> AI Innovations in 2023
                         </li>
                         <li class="list-group-item list-group-item-action">
-                            <i class="fas fa-bullhorn"></i> Announcements
+                            <i class="fas fa-bullhorn"></i> Top Tech Conferences This Year
                         </li>
                         <li class="list-group-item list-group-item-action">
-                            <i class="fas fa-calendar-alt"></i> Calendars
-                        </li>
-                        <li class="list-group-item list-group-item-action">
-                            <i class="fas fa-ellipsis-h"></i> etc
+                            <i class="fas fa-calendar-alt"></i> Upcoming Gadget Releases
                         </li>
                     </ul>
+                
+                    <small class="text-muted">
+                        We respect your privacy. No spam, ever. <a href="#" class="text-primary">Read our Privacy Policy.</a>
+                    </small>
                 </div>
+                
+                
             </div>
         </div>
     </main>

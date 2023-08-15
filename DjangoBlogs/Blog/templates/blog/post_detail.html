@@ -1,19 +1,30 @@
 {% extends 'blog/base.html' %}
 {% block body %}
+{% load humanize %}
 <article class="media content-section">
     <div class="media-body">
-        <div
-            class="article-metadata d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center">
-            <div class="mb-2 mb-md-0"> <!-- mb-* classes for margin on small screens -->
-                <img class="rounded-circle article-img" src="{{ object.author.profile.profile_pic.url }}"
-                    style="width: 65px; height: 65px;">
-                {% if user.profile.slug == object.author.profile.slug %}
-                <a class="mr-2" href="{% url 'user_profile' %}">{{ object.author }}</a>
-                {% else %}
-                <a class="mr-2" href="{% url 'user-profile-details' object.author.profile.slug  %}">{{ object.author }}</a>
-                {% endif %}
-                <small class="text-muted">{{ object.date_posted|date:"j M, Y" }}</small>
+        <div class="article-metadata d-flex flex-column flex-md-row justify-content-between">
+            <div class="d-flex flex-column flex-md-row align-items-start align-items-md-center mb-2 mb-md-1"> 
+                <!-- The classes above ensure stacking on small screens and horizontal layout on medium screens -->
+
+                <!-- Profile Image -->
+                <img class="rounded-circle article-img mr-md-3" src="{{ object.author.profile.profile_pic.url }}"
+                     style="width: 65px; height: 65px;">
+
+                <div class="mt-2 mt-md-0"> <!-- Added classes for top margin on small screens -->
+                    <!-- User Profile Link -->
+                    {% if user.profile.slug == object.author.profile.slug %}
+                        <a class="d-block font-weight-bold" href="{% url 'user_profile' %}">{{ object.author }}</a>
+                    {% else %}
+                        <a class="d-block font-weight-bold" href="{% url 'user-profile-details' object.author.profile.slug  %}">{{ object.author }}</a>
+                    {% endif %}
+
+                    <!-- Posted Date -->
+                    <small class="text-muted d-block mt-1">{{ object.date_posted|date:"j M, Y" }}</small>
+                </div>
             </div>
+
+            <!-- Update and Delete Links -->
             {% if object.author == user %}
             <div>
                 <a href="{% url 'post-update' object.slug %}" class="rounded-pill px-2 py-1 bg-info text-white mr-1"
@@ -23,12 +34,13 @@
             </div>
             {% endif %}
         </div>
+
+        <!-- Article Title and Content -->
         <h3><a class="article-title" href="">{{ object.title }}</a></h3>
         <p class="article-content">{{ object.content }}</p>
-        <div>
-        </div>
     </div>
 </article>
+
 {% if not user.profile.slug == object.author.profile.slug %}
 <form action="{% url 'post-comment' object.slug %}" method="POST">
 <div class="row mt-3">
@@ -45,35 +57,32 @@
 </form>
 {% endif %}
 
-<!-- Comments Section -->
-<section class="mt-4">
-    <h4>Comments</h4>
-    {% for comment in object.blogcomment_set.all %}
-        <div class="card mb-3">
-            <div class="card-body small"> <!-- 'small' class reduces font size -->
-                <div class="row">
-                    <!-- Left side for image -->
-                    <div class="col-2">
-                        <img class="img-fluid rounded-circle" src="{{ comment.user.profile.profile_pic.url }}" alt="{{ comment.user.username }}" style="width: 76px; height: 76px;">
-                    </div>
-                    <!-- Right side for author name and posted date -->
-                    <div class="col-10">
+<section class="mt-5">
+    <h4 class="mb-4">Comments ({{comments.count}})</h4>
+    {% for comment in comments %}
+        <div class="card mb-3 p-1"> <!-- Increased padding and margin for the card -->
+            <div class="d-flex">
+                <!-- Left side for image -->
+                <div class="pr-3">
+                    <img class="rounded-circle" src="{{ comment.user.profile.profile_pic.url }}" alt="{{ comment.user.username }}" style="width: 50px; height: 50px;">
+                </div>
+                <!-- Right side for content -->
+                <div>
+                    <div class=" mb-2" > <!-- Added bottom margin for spacing between name/timestamp and the comment -->
                         {% if comment.user.profile.slug == user.profile.slug %}
-                            <a class="mr-2" href="{% url 'user_profile' %}">{{ comment.user.username }}</a>
+                            <a class="font-weight-bold mx-2 text-primary" href="{% url 'user_profile' %}" style="text-decoration: none;" >{{ comment.user.username }}</a>
                         {% else %}
-                        <a class="mr-2" href="{% url 'user-profile-details' comment.user.profile.slug  %}">{{ comment.user.username }}</a>
+                            <a class="font-weight-bold mx-2" href="{% url 'user-profile-details' comment.user.profile.slug  %}" style="text-decoration: none;">{{ comment.user.username }}</a>
                         {% endif %}
-                        <p class="text-muted">{{ comment.comment_posted_date|date:"j M, Y" }}</p>
-                        {{ comment.comment }}
+                        <small class="text-muted">{{ comment.comment_posted_date|naturaltime }}</small>
                     </div>
+                    <p class=" mx-2">{{ comment.comment }}</p> <!-- Removed bottom margin for the last paragraph in a container -->
                 </div>
             </div>
         </div>
     {% empty %}
-        <p class="text-muted">No comments yet. Be the first one to comment!</p>
+        <p class="text-muted mt-3">No comments yet. Be the first one to comment!</p> <!-- Added top margin for spacing -->
     {% endfor %}
 </section>
-
-
 
 {% endblock body %}

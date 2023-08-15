@@ -1,3 +1,17 @@
+/* Default (Light mode) styles */
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #fff;
+  color: #333;
+}
+
+/* Dark mode styles */
+[data-theme="dark"] {
+  background-color: #333;
+  color: #fff;
+  /* Add other styles for dark mode */
+}
+
 
 .content-section {
   background: #ffffff;
@@ -56,10 +70,6 @@ a.article-title:hover {
 
 .account-heading {
   font-size: 2.5rem;
-}
-body {
-  font-family: 'Nunito', sans-serif;
-  background-color: #f8f9fa;
 }
 
 .navbar {
@@ -268,4 +278,27 @@ animation: colors 5s infinite alternate;
     margin-right: 5px; /* Creates a little space between the icon and text */
 }
 
-  
+.social-icons {
+  display: flex;
+  justify-content: space-between;
+}
+
+.social-icons a {
+  color: #555;  /* Adjust color as per your theme */
+  font-size: 20px;
+  margin: 0 5px;
+  transition: 0.3s ease;
+}
+
+.social-icons a:hover {
+  color: #007bff;  /* Adjust hover color as per your theme */
+}
+
+.list-group-item {
+  transition: background 0.3s ease;
+}
+
+.list-group-item:hover {
+  background: #f5f5f5;  /* Light hover effect */
+}
+

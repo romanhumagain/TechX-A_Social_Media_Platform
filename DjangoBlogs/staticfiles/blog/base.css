@@ -190,7 +190,7 @@ footer {
 }
 
 .logo-highlight {
-font-weight: bold;
+  font-size: 24px;
 
 /* The text color is set to transparent so only the background shows. */
 color: transparent; 
@@ -211,29 +211,61 @@ animation: colors 5s infinite alternate;
   100% { background-position: 100% 50%; }
 }
 
-.alert-custom {
-  padding: 5px 15px;
-  font-size: 0.8rem;  /* Adjust as required */
+.custom-blog-form label {
+  margin-bottom: 10px;  /* adjust this value as needed */
 }
 
-/* for user home page to show the profile */
-  .user-badge {
-        display: inline-block;
-        padding: 5px 12px;
-        background-color: rgba(0, 0, 0, 0.2); /* Slight transparent background */
-        border-radius: 15px;
-        transition: background-color 0.3s ease;
+.read-more-link {
+  color: #007bff;
+  text-decoration: none;
+  transition: color 0.3s ease;
+  font-weight: 600;
+  margin-top: 8px;
+  display: inline-block;
+}
+
+.read-more-link:hover {
+  color: #0056b3;
+}
+
+.read-more-link i {
+  margin-left: 5px;
+}
+.article-content {
+  white-space: pre-line;
+}
+
+    .follow-btn {
+        width: 120px;
     }
+    .read-more-link {
+      transition: color 0.2s, transform 0.2s;
+  }
+  
+  .read-more-link:hover {
+      color: #007BFF;  /* Change this to your desired hover color */
+      transform: translateX(5px);
+  }
 
-    .user-badge:hover {
-        background-color: rgba(0, 0, 0, 0.4); /* Darker on hover */
-    }
+  .custom-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #007BFF; /* You can choose your own color */
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    text-align: center;
+    text-decoration: none;
+    transition: background-color 0.2s;
+}
 
-    .user-badge i {
-        margin-right: 5px;
-    }
+.custom-btn:hover {
+    background-color: #0056b3; /* Darker shade for hover effect */
+}
 
-    .custom-blog-form label {
-      margin-bottom: 10px;  /* adjust this value as needed */
-  }  
+.custom-btn i {
+    margin-right: 5px; /* Creates a little space between the icon and text */
+}
 
+  

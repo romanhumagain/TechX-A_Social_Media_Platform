@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from django.db import models
 from django.forms.models import BaseModelForm
 from django.shortcuts import get_object_or_404, render , redirect
@@ -9,16 +10,24 @@ from django.http import HttpResponse
 from Blog.models import *
 from Users.models import *
 from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
+from django.core.paginator import Paginator
 
 class PostListView(ListView):
   model = BlogPost
   template_name = 'blog/home.html'
   context_object_name = 'posts'
   ordering = ['-date_posted']
+  paginate_by = 5
 
 class PostDetailsView(DetailView):
-  model = BlogPost
+  model = BlogPost 
   template_name = 'blog/post_detail.html'
+
+  def get_context_data(self, **kwargs):
+    context = super().get_context_data(**kwargs)
+    post = get_object_or_404(BlogPost, slug = self.kwargs.get('slug'))
+    context['comments'] = BlogComment.objects.filter(post = post).order_by('-comment_posted_date')
+    return context
   
 class PostCreateView(LoginRequiredMixin , CreateView):
   model = BlogPost
@@ -55,18 +64,22 @@ class PostDeleteView( LoginRequiredMixin , UserPassesTestMixin ,DeleteView):
       return True
     return False
   
+    
 class UserProfileDetailsView(LoginRequiredMixin, View):
     def get(self, request , *args , **kwargs):
         profile = Profile.objects.get(slug=kwargs.get('slug'))
         user = profile.user
         posts = BlogPost.objects.filter(author = user).order_by('-date_posted')
+        paginator = Paginator(posts , 2)
+        page = request.GET.get('page' , 1)
+        page_obj = paginator.get_page(page)
+        
         context = {
             'target_user':user,
             'title':'Profile',
-            'posts':posts,
+            'page_obj':page_obj,
             }
         return render(request, 'blog/view_other_profile.html', context)
-      
       
 class PostCommentView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
