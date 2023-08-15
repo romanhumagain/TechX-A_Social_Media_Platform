@@ -5,3 +5,4 @@ from Blog.models import *
 
 admin.site.register(BlogPost)
 admin.site.register(BlogComment)
+admin.site.register(Like)

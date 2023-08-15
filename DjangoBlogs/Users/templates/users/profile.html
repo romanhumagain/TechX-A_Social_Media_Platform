@@ -1,10 +1,11 @@
 {% extends "blog/base.html" %}
 {% block search_bar %}
-<!-- Search Bar -->
-<div class="input-group mb-4">
-  <input type="text" class="form-control" placeholder="Search our blog..." aria-label="Search">
-  <button class="btn btn-outline-secondary" type="button" id="search-button"><i class="fas fa-search"></i></button>
-</div>
+<form>
+  <div class="input-group mb-4">
+      <input type="text" class="form-control" name="search" placeholder="Search your articles..." aria-label="Search">
+      <button class="btn btn-outline-secondary" type="submit"  id="search-button"><i class="fas fa-search"></i></button>
+  </div>
+  </form>
 {% endblock %}
 {% block body %}
 <style>
@@ -49,7 +50,10 @@
     transform: scale(1.1);
     /* Slightly enlarge the icon on hover */
   }
-
+  .icon-link.love-icon:hover {
+    color: #fd1212;
+    /* Example color for share */
+  }
   /* Optional: You can add individual colors to specific icons if desired */
   .icon-link.comment-icon:hover {
     color: #FF5733;
@@ -78,7 +82,7 @@
       <hr>
       <div class="d-flex align-items-center mb-3">
         <i class="fas fa-users m-1"></i>
-        <span>{{ user.profile.follower }} Followers</span>
+        <span>{{ user.profile.follower_count }} Followers</span>
       </div>
       <a href="{% url 'update_profile' %}" class="btn btn-outline-secondary">
         <i class="fas fa-user"></i> Update Profile
@@ -103,22 +107,20 @@
   </div>
   <div class="icons-container">
     <!-- Like Icon -->
-    <a href="#" class="icon-link">
-      <i class="fas fa-thumbs-up"></i>
+    <a href="#" class="icon-link love-icon">
+      <i class="fas fa-heart"></i>
       <span class="icon-count">123</span> <!-- Example count for likes -->
     </a>
 
     <!-- Comment Icon -->
-    <a href="#" class="icon-link comment-icon">
+    <a href="{% url 'post-details' post.slug  %}#comments" class="icon-link comment-icon">
       <i class="fas fa-comment"></i>
       <span class="icon-count">{{ post.blogcomment_set.count }}</span>
     </a>
-
-    <!-- Share Icon -->
-    <a href="#" class="icon-link share-icon">
-      <i class="fas fa-share-alt"></i>
-      <span class="icon-count">67</span> <!-- Example count for shares -->
-    </a>
+    <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri|add:post.get_absolute_url }}&title={{ post.title }}" target="_blank" class="icon-link">
+      <i class="fab fa-linkedin-in"></i>
+  </a>
+  
   </div>
 </article>
 {% endfor %}

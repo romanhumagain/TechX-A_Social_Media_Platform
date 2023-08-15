@@ -1,6 +1,6 @@
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import Http404
-from django.shortcuts import render, redirect
+from django.http import Http404, JsonResponse
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.views import View
 from django.contrib.auth import authenticate, login
@@ -12,6 +12,7 @@ from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
 from Blog.models import BlogPost
 from django.core.paginator import Paginator
+from . models import Profile , Follow
 
 def register_user(request):
     if request.method == 'POST':
@@ -76,6 +77,10 @@ class ProfileDetailsView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
             # If page is out of range (e.g. 9999), serve the last page of results
             page_obj = paginator.page(paginator.num_pages)
         
+        search = self.request.GET.get('search')
+        if search:
+            page_obj = posts.filter(title__icontains = search)
+        
         context['page_obj'] = page_obj
         context['title'] = 'Profile'
         return context
@@ -114,4 +119,28 @@ class UpdateProfileView(LoginRequiredMixin, View):
             return redirect('user_profile')
             
             
+# for follow and unfollow
+@login_required
+def follow(request, slug):
+    target_profile = get_object_or_404(Profile, slug=slug)
+    if not Follow.objects.filter(follower=request.user.profile, followed=target_profile).exists() and request.user.profile != target_profile:
+        Follow.objects.create(follower=request.user.profile, followed=target_profile)
+        
+        # Increase the follower count
+        target_profile.follower_count += 1
+        target_profile.save()
+
+        return JsonResponse({'success': True, 'follower_count': target_profile.follower_count})
+    return JsonResponse({'success': False})
+
+@login_required
+def unfollow(request, slug):
+    target_profile = get_object_or_404(Profile, slug=slug)
+    unfollowed = Follow.objects.filter(follower=request.user.profile, followed=target_profile).delete()
     
+    # Decrease the follower count if someone was unfollowed
+    if unfollowed[0]:  # [0] because .delete() returns a tuple (num_deleted, details)
+        target_profile.follower_count -= 1
+        target_profile.save()
+
+    return JsonResponse({'success': True, 'follower_count': target_profile.follower_count})

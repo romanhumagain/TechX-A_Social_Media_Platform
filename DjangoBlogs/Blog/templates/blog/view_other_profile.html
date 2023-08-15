@@ -1,12 +1,72 @@
 {% extends "blog/base.html" %}
+{% load static %}
 {% block search_bar %}
-<!-- Search Bar -->
-<div class="input-group mb-4">
-  <input type="text" class="form-control" placeholder="Search our blog..." aria-label="Search">
-  <button class="btn btn-outline-secondary" type="button" id="search-button"><i class="fas fa-search"></i></button>
-</div>
+<form>
+  <div class="input-group mb-4">
+    <input type="text" class="form-control" name="search" placeholder="Search articles title..." aria-label="Search">
+    <button class="btn btn-outline-secondary" type="submit" id="search-button"><i class="fas fa-search"></i></button>
+  </div>
+</form>
 {% endblock %}
 {% block body %}
+<style>
+  .icons-container {
+      text-align: center;
+      /* This centers the inner content */
+      margin-top: 20px;
+      /* Add some top margin for spacing */
+  }
+
+  .icon-link {
+      display: inline-block;
+      padding: 15px;
+      /* Increased padding for larger touch area */
+      color: #2D2D2D;
+      /* Dark gray */
+      font-size: 25px;
+      /* Increased font-size for bigger icons */
+      transition: color 0.3s, transform 0.2s;
+      margin: 0 15px;
+      /* Increased spacing between icons */
+      position: relative;
+      /* Relative position to allow absolute positioning of child elements */
+  }
+
+  .icon-count {
+      position: absolute;
+      top: 50%;
+      right: -10px;
+      /* Adjust based on your preference */
+      transform: translateY(-50%);
+      /* Center vertically */
+      font-size: 14px;
+      /* Font size for the count */
+      color: #007BFF;
+      /* Color for the count */
+  }
+
+  .icon-link:hover {
+      color: #007BFF;
+      /* Change to any color you prefer on hover */
+      transform: scale(1.1);
+      /* Slightly enlarge the icon on hover */
+  }
+  .icon-link.love-icon:hover {
+  color: #fd1212;
+  /* Example color for share */
+}
+
+  /* Optional: You can add individual colors to specific icons if desired */
+  .icon-link.comment-icon:hover {
+      color: #FF5733;
+      /* Example color for comment */
+  }
+
+  .icon-link.share-icon:hover {
+      color: #33FF57;
+      /* Example color for share */
+  }
+</style>
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-4 text-center">
@@ -20,11 +80,16 @@
       <div class="d-flex align-items-center mb-3">
         <div class="d-flex align-items-center">
           <i class="fas fa-users m-1"></i>
-          <span>{{ target_user.profile.follower }} Followers</span>
+          <span class="follower-count">{{ target_user.profile.follower_count }} Followers</span>
         </div>
-        <button class="btn btn-secondary follow-btn" style="margin-left: 20px">
-          <i class="fas fa-user-plus"></i> Follow
-        </button>
+        <button class="btn btn-outline-secondary follow-btn btn-sm mx-2" data-action="{% if is_following %}unfollow{% else %}follow{% endif %}" data-slug="{{ target_user.profile.slug }}">
+          {% if is_following %}
+              <i class="fas fa-user-minus"></i> Unfollow
+          {% else %}
+              <i class="fas fa-user-plus"></i> Follow
+          {% endif %}
+      </button>
+      <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
       </div>
     </div>
   </div>
@@ -49,6 +114,23 @@
     <p class="article-content">{{ post.content }}</p>
   </div>
 </article>
+<div class="icons-container">
+  <!-- Like Icon -->
+  <a href="#" class="icon-link love-icon">
+    <i class="fas fa-heart"></i>
+    <span class="icon-count">123</span> <!-- Example count for likes -->
+  </a>
+
+  <!-- Comment Icon -->
+  <a href="{% url 'post-details' post.slug  %}#comments" class="icon-link comment-icon">
+    <i class="fas fa-comment"></i>
+    <span class="icon-count">{{ post.blogcomment_set.count }}</span>
+  </a>
+  <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri|add:post.get_absolute_url }}&title={{ post.title }}" target="_blank" class="icon-link">
+    <i class="fab fa-linkedin-in"></i>
+</a>
+
+</div>
 {% endfor %}
 
 <div class="container mt-5">
@@ -101,7 +183,11 @@
   <h4 class="text-muted mt-3">No Posts Yet!</h4>
   <p class="mt-2 text-muted">Looks like this user hasn't shared anything yet. Check back later!</p>
 </div>
-  
+
 {% endif %}
 
+<input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> <!-- Add this line for the CSRF token -->
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery library -->
+<script src="{% static 'follow.js' %}"></script> <!-- Link to the AJAX script -->
 {% endblock %}

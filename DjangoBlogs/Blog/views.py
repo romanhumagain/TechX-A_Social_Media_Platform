@@ -1,5 +1,5 @@
-from typing import Any, Dict
 from django.db import models
+from django.db.models.query import QuerySet
 from django.forms.models import BaseModelForm
 from django.shortcuts import get_object_or_404, render , redirect
 from django.views import View
@@ -11,13 +11,35 @@ from Blog.models import *
 from Users.models import *
 from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
 from django.core.paginator import Paginator
+from django.db.models import Q
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
 
 class PostListView(ListView):
-  model = BlogPost
-  template_name = 'blog/home.html'
-  context_object_name = 'posts'
-  ordering = ['-date_posted']
-  paginate_by = 5
+    model = BlogPost
+    template_name = 'blog/home.html'
+    context_object_name = 'posts'
+    ordering = ['-date_posted']
+    paginate_by = 5
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        search = self.request.GET.get('search')
+        if search:
+            queryset = queryset.filter(Q(title__icontains=search)|
+                                       Q(content__icontains=search)|
+                                       Q(author__username__icontains=search))
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        
+        if self.request.user.is_authenticated:
+            user_liked_post_ids = Like.objects.filter(user=self.request.user).values_list('post__id', flat=True)
+            context['user_liked_post_ids'] = list(user_liked_post_ids)
+
+        return context
+       
 
 class PostDetailsView(DetailView):
   model = BlogPost 
@@ -63,21 +85,26 @@ class PostDeleteView( LoginRequiredMixin , UserPassesTestMixin ,DeleteView):
     if self.request.user == post.author:
       return True
     return False
-  
     
 class UserProfileDetailsView(LoginRequiredMixin, View):
     def get(self, request , *args , **kwargs):
         profile = Profile.objects.get(slug=kwargs.get('slug'))
+        is_following = Follow.objects.filter(follower = request.user.profile , followed = profile).exists()
         user = profile.user
         posts = BlogPost.objects.filter(author = user).order_by('-date_posted')
         paginator = Paginator(posts , 2)
         page = request.GET.get('page' , 1)
         page_obj = paginator.get_page(page)
         
+        search = self.request.GET.get('search')
+        if search:
+            page_obj = posts.filter(title__icontains = search)
+        
         context = {
             'target_user':user,
             'title':'Profile',
             'page_obj':page_obj,
+            'is_following':is_following
             }
         return render(request, 'blog/view_other_profile.html', context)
       
@@ -95,7 +122,23 @@ class PostCommentView(LoginRequiredMixin, View):
         
         messages.success(request, "Successfully added comment!")
         return redirect('post-details', slug=post.slug)
-    
+
+from django.db import transaction
+
+@login_required
+def like_post(request, post_id):
+    post = get_object_or_404(BlogPost, id=post_id)
+    like = Like.objects.filter(post=post, user=request.user).first()
+
+    with transaction.atomic():  # Start of the atomic transaction
+        if like:
+            like.delete()
+            BlogPost.objects.filter(id=post_id).update(likes_count=models.F('likes_count') - 1)
+        else:
+            Like.objects.create(post=post, user=request.user)
+            BlogPost.objects.filter(id=post_id).update(likes_count=models.F('likes_count') + 1)
+
+    return redirect(request.META.get('HTTP_REFERER', 'default_url'))
     
   
 def about(request):

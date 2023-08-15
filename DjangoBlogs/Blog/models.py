@@ -11,6 +11,7 @@ class BlogPost(models.Model):
   title = models.CharField(max_length=100)
   content = models.TextField()
   date_posted = models.DateTimeField(default = timezone.now)
+  likes_count = models.IntegerField(null=True, default=0)
   
   # to create the slug field..
   def save(self, *args, **kwargs):
@@ -34,6 +35,16 @@ class BlogComment(models.Model):
   
   def __str__(self) -> str:
     return "comment by " + self.user.username + "on " + self.post.title
+  
+class Like(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
+    
+    def __str__(self):
+      return f'liked by{self.user.username} on {self.post.title}'
+    
+    class Meta:
+        unique_together = ('user', 'post')
   
   
   

@@ -8,8 +8,8 @@ class Profile(models.Model):
     slug = models.SlugField(null=True,unique=True)
     profile_pic = models.ImageField(default='profile_pics/default.jpg', upload_to='profile_pics')
     bio = models.TextField(max_length=200, null=True, default=None)
-    follower = models.IntegerField(null=True, default=0)
-
+    follower_count = models.IntegerField(null=True, default=0)
+    following = models.ManyToManyField('self' , through = 'Follow' , related_name='followers' , symmetrical=False)
     def __str__(self) -> str:
         return f'{self.user.username} Profile'
     
@@ -25,3 +25,15 @@ class Profile(models.Model):
             resized_size = (350, 350)
             image.thumbnail(resized_size)
             image.save(self.profile_pic.path)
+            
+            
+class Follow(models.Model):
+    follower = models.ForeignKey(Profile , related_name='following_set', on_delete=models.CASCADE)
+    followed = models.ForeignKey(Profile , related_name= 'follower_ser' , on_delete=models.CASCADE)
+    date_followed = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        unique_together = ['follower' , 'followed']
+        
+    def __str__(self):
+        return f"{self.follower.user.username} follows {self.followed.user.username}"

@@ -30,6 +30,8 @@ urlpatterns = [
     path('' , include('Blog.urls')),
     path('user/' , include('Users.urls')),
     
+    
+    
 ]
 
 if settings.DEBUG:

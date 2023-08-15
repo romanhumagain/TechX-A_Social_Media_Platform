@@ -1,143 +1,171 @@
 {% extends 'blog/base.html' %}
+{% load static %}
+
 {% block search_bar %}
-                    <!-- Search Bar -->
-                    <div class="input-group mb-4">
-                        <input type="text" class="form-control" placeholder="Search our blog..." aria-label="Search">
-                        <button class="btn btn-outline-secondary" type="button" id="search-button"><i class="fas fa-search"></i></button>
-                    </div>
-                    {% endblock %}
+<!-- Search Bar -->
+<form>
+<div class="input-group mb-4">
+    <input type="text" class="form-control" name="search" placeholder="Search articles or authors..." aria-label="Search">
+    <button class="btn btn-outline-secondary" type="submit"  id="search-button"><i class="fas fa-search"></i></button>
+</div>
+</form>
+{% endblock %}
 {% block body %}
 <style>
-  .icons-container {
-    text-align: center; /* This centers the inner content */
-    margin-top: 20px; /* Add some top margin for spacing */
-}
+    .icons-container {
+        text-align: center;
+        /* This centers the inner content */
+        margin-top: 20px;
+        /* Add some top margin for spacing */
+    }
 
-.icon-link {
-    display: inline-block;
-    padding: 15px; /* Increased padding for larger touch area */
-    color: #2D2D2D; /* Dark gray */
-    font-size: 25px; /* Increased font-size for bigger icons */
-    transition: color 0.3s, transform 0.2s;
-    margin: 0 15px; /* Increased spacing between icons */
-    position: relative; /* Relative position to allow absolute positioning of child elements */
-}
+    .icon-link {
+        display: inline-block;
+        padding: 15px;
+        /* Increased padding for larger touch area */
+        color: #2D2D2D;
+        /* Dark gray */
+        font-size: 25px;
+        /* Increased font-size for bigger icons */
+        transition: color 0.3s, transform 0.2s;
+        margin: 0 15px;
+        /* Increased spacing between icons */
+        position: relative;
+        /* Relative position to allow absolute positioning of child elements */
+    }
 
-.icon-count {
-    position: absolute;
-    top: 50%;
-    right: -10px; /* Adjust based on your preference */
-    transform: translateY(-50%); /* Center vertically */
-    font-size: 14px; /* Font size for the count */
-    color: #007BFF; /* Color for the count */
-}
+    .icon-count {
+        position: absolute;
+        top: 50%;
+        right: -10px;
+        /* Adjust based on your preference */
+        transform: translateY(-50%);
+        /* Center vertically */
+        font-size: 14px;
+        /* Font size for the count */
+        color: #007BFF;
+        /* Color for the count */
+    }
 
-.icon-link:hover {
-    color: #007BFF; /* Change to any color you prefer on hover */
-    transform: scale(1.1); /* Slightly enlarge the icon on hover */
-}
+    .icon-link:hover {
+        color: #007BFF;
+        /* Change to any color you prefer on hover */
+        transform: scale(1.1);
+        /* Slightly enlarge the icon on hover */
+    }
+    .icon-link.love-icon:hover {
+    color: #fd1212;
+    /* Example color for share */
+  }
 
-/* Optional: You can add individual colors to specific icons if desired */
-.icon-link.comment-icon:hover {
-    color: #FF5733; /* Example color for comment */
-}
+    /* Optional: You can add individual colors to specific icons if desired */
+    .icon-link.comment-icon:hover {
+        color: #FF5733;
+        /* Example color for comment */
+    }
 
-.icon-link.share-icon:hover {
-    color: #33FF57; /* Example color for share */
-}
-
+    .icon-link.share-icon:hover {
+        color: #33FF57;
+        /* Example color for share */
+    }
 </style>
 {% for post in posts %}
 <article class="media content-section">
- <div class="media-body">
-    <div class="article-metadata d-flex align-items-start">
-        <img class="rounded-circle article-img mr-3 mb-1" src="{{ post.author.profile.profile_pic.url }}" style="width: 65px; height: 65px;">
+    <div class="media-body">
+        <div class="article-metadata d-flex align-items-start">
+            <img class="rounded-circle article-img mr-3 mb-1" src="{{ post.author.profile.profile_pic.url }}"
+                style="width: 65px; height: 65px;">
 
-        <div>
-            {% if user.profile.slug == post.author.profile.slug %}
-                <a href="{% url 'user_profile' %}" class="d-block font-weight-bold">{{ post.author }}</a>
-            {% else %}
-                <a href="{% url 'user-profile-details' post.author.profile.slug  %}" class="d-block font-weight-bold">{{ post.author }}</a>
-            {% endif %}
-            <small class="text-muted">{{ post.date_posted|date:"j M, Y" }}</small>
+            <div>
+                {% if user.profile.slug == post.author.profile.slug %}
+                <a href="{% url 'user_profile' %}" class="d-block font-weight-bold">
+                    {{ post.author }}
+                </a>
+                {% else %}
+                <a href="{% url 'user-profile-details' post.author.profile.slug  %}" class="d-block font-weight-bold">
+                    {{post.author }}
+                </a>
+                {% endif %}
+                <small class="text-muted">{{ post.date_posted|date:"j M, Y" }}</small>
+            </div>
         </div>
-    </div>
-    
-    <h3 class="mt-2"><a class="article-title" href="{% url 'post-details' post.slug %}">{{ post.title }}</a></h3>
 
-    <p class="article-content">{{ post.content|truncatewords:120 }}</p>
+        <h3 class="mt-2"><a class="article-title" href="{% url 'post-details' post.slug %}">{{ post.title }}</a></h3>
 
-    <!-- Check if the content's word count exceeds 120 -->
-    {% if post.content|wordcount > 120 %}
+        <p class="article-content">{{ post.content|truncatewords:120 }}</p>
+
+        <!-- Check if the content's word count exceeds 120 -->
+        {% if post.content|wordcount > 120 %}
         <a href="{% url 'post-details' post.slug %}" class="text-dark" style="font-weight: lighter;">Read More</a>
-    {% endif %}
-</div>
+        {% endif %}
+    </div>
+    <div class="icons-container">
 
-
-<div class="icons-container">
-  <!-- Like Icon -->
-  <a href="#" class="icon-link">
-    <i class="fas fa-thumbs-up"></i>
-    <span class="icon-count">123</span> <!-- Example count for likes -->
-  </a>
-
-  <!-- Comment Icon -->
-  <a href="#" class="icon-link comment-icon">
-    <i class="fas fa-comment"></i>
-    <span class="icon-count">{{ post.blogcomment_set.count }}</span>
-  </a>
-
-  <!-- Share Icon -->
-  <a href="#" class="icon-link share-icon">
-    <i class="fas fa-share-alt"></i>
-    <span class="icon-count">67</span> <!-- Example count for shares -->
-  </a>
-</div>
+        <!-- Like Icon -->
+        <a href="{% url 'like_post' post.id %}" class="icon-link like-btn" data-post-id="{{ post.id }}">
+            <i class="fas fa-heart {% if post.id in user_liked_post_ids %}text-danger{% endif %}"></i>
+            <span class="icon-count">{{ post.likes_count }}</span>
+        </a>
+        
+        <!-- Comment Icon -->
+        <a href="{% url 'post-details' post.slug  %}#comments" class="icon-link comment-icon">
+          <i class="fas fa-comment"></i>
+          <span class="icon-count">{{ post.blogcomment_set.count }}</span>
+        </a>
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri|add:post.get_absolute_url }}&title={{ post.title }}" target="_blank" class="icon-link">
+          <i class="fab fa-linkedin-in"></i>
+      </a>
+      
+      </div>
 </article>
-{% endfor %}  
+{% endfor %}
 <div class="container mt-5">
-  <nav aria-label="Page navigation">
-      <ul class="pagination justify-content-center">
-          {% if is_paginated %}
+    <nav aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+            {% if is_paginated %}
 
-          <!-- Display 'First' button only if not on the first page -->
-          {% if not page_obj.number == 1 %}
-              <li class="page-item">
-                  <a class="page-link" href="?page=1" aria-label="First"><span aria-hidden="true">&laquo;&laquo;</span></a>
-              </li>
-          {% endif %}
+            <!-- Display 'First' button only if not on the first page -->
+            {% if not page_obj.number == 1 %}
+            <li class="page-item">
+                <a class="page-link" href="?page=1" aria-label="First"><span
+                        aria-hidden="true">&laquo;&laquo;</span></a>
+            </li>
+            {% endif %}
 
-          <!-- Display 'Previous' button only if there's a previous page -->
-          {% if page_obj.has_previous %}
-              <li class="page-item">
-                  <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
-              </li>
-          {% endif %}
+            <!-- Display 'Previous' button only if there's a previous page -->
+            {% if page_obj.has_previous %}
+            <li class="page-item">
+                <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous"><span
+                        aria-hidden="true">&laquo;</span></a>
+            </li>
+            {% endif %}
 
-          {% for num in page_obj.paginator.page_range %}
-              {% if page_obj.number == num %}
-                  <li class="page-item active">
-                      <span class="page-link">{{ num }}</span>
-                  </li>
-              {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %}
-                  <li class="page-item">
-                      <a class="page-link" href="?page={{ num }}">{{ num }}</a>
-                  </li>
-              {% endif %}
-          {% endfor %}
+            {% for num in page_obj.paginator.page_range %}
+            {% if page_obj.number == num %}
+            <li class="page-item active">
+                <span class="page-link">{{ num }}</span>
+            </li>
+            {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %} <li class="page-item">
+                <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
 
-          <!-- Display 'Next' and 'Last' buttons only if there's a next page -->
-          {% if page_obj.has_next %}
-              <li class="page-item">
-                  <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>
-              </li>
-              <li class="page-item">
-                  <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last"><span aria-hidden="true">&raquo;&raquo;</span></a>
-              </li>
-          {% endif %}
+                <!-- Display 'Next' and 'Last' buttons only if there's a next page -->
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next"><span
+                            aria-hidden="true">&raquo;</span></a>
+                </li>
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last"><span
+                            aria-hidden="true">&raquo;&raquo;</span></a>
+                </li>
+                {% endif %}
 
-          {% endif %}
-      </ul>
-  </nav>
-</div> 
+                {% endif %}
+        </ul>
+    </nav>
+</div>
+<script src="{% static 'js/like.js' %}"></script>
 {% endblock body %}

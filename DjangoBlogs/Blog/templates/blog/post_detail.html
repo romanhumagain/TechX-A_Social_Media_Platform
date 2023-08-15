@@ -58,7 +58,7 @@
 {% endif %}
 
 <section class="mt-5">
-    <h4 class="mb-4">Comments ({{comments.count}})</h4>
+    <h4 id="comments" class="mb-4">Comments ({{comments.count}})</h4>
     {% for comment in comments %}
         <div class="card mb-3 p-1"> <!-- Increased padding and margin for the card -->
             <div class="d-flex">
@@ -84,5 +84,16 @@
         <p class="text-muted mt-3">No comments yet. Be the first one to comment!</p> <!-- Added top margin for spacing -->
     {% endfor %}
 </section>
-
+<script>
+   // Smooth scrolling to BSC Details section
+   $('a[href^="#comments"]').on('click', function (event) {
+    var target = $(this.getAttribute('href'));
+    if (target.length) {
+      event.preventDefault();
+      $('html, body').stop().animate({
+        scrollTop: target.offset().top
+      }, 800);
+    }
+  });  
+</script>
 {% endblock body %}
