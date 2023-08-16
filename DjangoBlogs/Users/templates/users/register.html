@@ -11,8 +11,8 @@
                 {% for field in form %}
                 <div class="form-floating mb-4">
                     <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}"
-                           class="form-control {% if field.errors %}is-invalid{% endif %}" id="{{ field.auto_id }}"
-                           placeholder="{{ field.label }}" {% if field.field.required %}required{% endif %}>
+                        class="form-control {% if field.errors %}is-invalid{% endif %}" id="{{ field.auto_id }}"
+                        placeholder="{{ field.label }}" {% if field.field.required %}required{% endif %}>
                     <label for="{{ field.auto_id }}">
                         {{ field.label }}
                         {% if field.field.required %}

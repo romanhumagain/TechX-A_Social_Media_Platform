@@ -1,81 +1,23 @@
 {% extends 'blog/base.html' %}
 {% load static %}
-
 {% block search_bar %}
 <!-- Search Bar -->
 <form>
-<div class="input-group mb-4">
-    <input type="text" class="form-control" name="search" placeholder="Search articles or authors..." aria-label="Search">
-    <button class="btn btn-outline-secondary" type="submit"  id="search-button"><i class="fas fa-search"></i></button>
-</div>
+    <div class="input-group mb-4">
+        <input type="text" class="form-control" name="search" placeholder="Search articles or authors..."
+            aria-label="Search">
+        <button class="btn btn-outline-secondary" type="submit" id="search-button"><i
+                class="fas fa-search"></i></button>
+    </div>
 </form>
 {% endblock %}
 {% block body %}
-<style>
-    .icons-container {
-        text-align: center;
-        /* This centers the inner content */
-        margin-top: 20px;
-        /* Add some top margin for spacing */
-    }
-
-    .icon-link {
-        display: inline-block;
-        padding: 15px;
-        /* Increased padding for larger touch area */
-        color: #2D2D2D;
-        /* Dark gray */
-        font-size: 25px;
-        /* Increased font-size for bigger icons */
-        transition: color 0.3s, transform 0.2s;
-        margin: 0 15px;
-        /* Increased spacing between icons */
-        position: relative;
-        /* Relative position to allow absolute positioning of child elements */
-    }
-
-    .icon-count {
-        position: absolute;
-        top: 50%;
-        right: -10px;
-        /* Adjust based on your preference */
-        transform: translateY(-50%);
-        /* Center vertically */
-        font-size: 14px;
-        /* Font size for the count */
-        color: #007BFF;
-        /* Color for the count */
-    }
-
-    .icon-link:hover {
-        color: #007BFF;
-        /* Change to any color you prefer on hover */
-        transform: scale(1.1);
-        /* Slightly enlarge the icon on hover */
-    }
-    .icon-link.love-icon:hover {
-    color: #fd1212;
-    /* Example color for share */
-  }
-
-    /* Optional: You can add individual colors to specific icons if desired */
-    .icon-link.comment-icon:hover {
-        color: #FF5733;
-        /* Example color for comment */
-    }
-
-    .icon-link.share-icon:hover {
-        color: #33FF57;
-        /* Example color for share */
-    }
-</style>
 {% for post in posts %}
 <article class="media content-section">
     <div class="media-body">
         <div class="article-metadata d-flex align-items-start">
             <img class="rounded-circle article-img mr-3 mb-1" src="{{ post.author.profile.profile_pic.url }}"
                 style="width: 65px; height: 65px;">
-
             <div>
                 {% if user.profile.slug == post.author.profile.slug %}
                 <a href="{% url 'user_profile' %}" class="d-block font-weight-bold">
@@ -91,32 +33,35 @@
         </div>
 
         <h3 class="mt-2"><a class="article-title" href="{% url 'post-details' post.slug %}">{{ post.title }}</a></h3>
-
-        <p class="article-content">{{ post.content|truncatewords:120 }}</p>
-
-        <!-- Check if the content's word count exceeds 120 -->
+        <p class="article-content" style="display: inline;">{{ post.content|truncatewords:120 }}</p>
         {% if post.content|wordcount > 120 %}
-        <a href="{% url 'post-details' post.slug %}" class="text-dark" style="font-weight: lighter;">Read More</a>
+        <a href="{% url 'post-details' post.slug %}" class="read-more-link">Read More</a>
         {% endif %}
+
     </div>
-    <div class="icons-container">
+    <div class="icons-container d-flex justify-content-center align-items-center mt-3">
 
         <!-- Like Icon -->
-        <a href="{% url 'like_post' post.id %}" class="icon-link like-btn" data-post-id="{{ post.id }}">
-            <i class="fas fa-heart {% if post.id in user_liked_post_ids %}text-danger{% endif %}"></i>
-            <span class="icon-count">{{ post.likes_count }}</span>
+        <a href="{% url 'like_post' post.id %}"
+            class="icon-link like-btn d-flex align-items-center mx-3 text-decoration-none" data-post-id="{{ post.id }}">
+            <i
+                class="{% if post.id in user_liked_post_ids %}fas fa-heart text-danger{% else %}far fa-heart text-secondary {% endif %}"></i>
+            <span class="icon-count ml-2 text-dark">{{ post.likes_count }}</span>
         </a>
-        
+       
         <!-- Comment Icon -->
-        <a href="{% url 'post-details' post.slug  %}#comments" class="icon-link comment-icon">
-          <i class="fas fa-comment"></i>
-          <span class="icon-count">{{ post.blogcomment_set.count }}</span>
+        <a href="{% url 'post-details' post.slug  %}#comments"
+            class="icon-link comment-icon d-flex align-items-center mx-3 text-decoration-none">
+            <i class="far fa-comment text-dark" ></i>
+            <span class="icon-count ml-2 text-dark">{{ post.blogcomment_set.count }}</span>
         </a>
-        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri|add:post.get_absolute_url }}&title={{ post.title }}" target="_blank" class="icon-link">
-          <i class="fab fa-linkedin-in"></i>
-      </a>
-      
-      </div>
+
+        <!-- LinkedIn Share -->
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri|add:post.get_absolute_url }}&title={{ post.title }}"
+            target="_blank" class="icon-link d-flex align-items-center mx-3 text-decoration-none">
+            <i class="fab fa-linkedin text-primary"></i>
+        </a>
+    </div>
 </article>
 {% endfor %}
 <div class="container mt-5">
@@ -139,7 +84,6 @@
                         aria-hidden="true">&laquo;</span></a>
             </li>
             {% endif %}
-
             {% for num in page_obj.paginator.page_range %}
             {% if page_obj.number == num %}
             <li class="page-item active">
@@ -162,7 +106,6 @@
                             aria-hidden="true">&raquo;&raquo;</span></a>
                 </li>
                 {% endif %}
-
                 {% endif %}
         </ul>
     </nav>

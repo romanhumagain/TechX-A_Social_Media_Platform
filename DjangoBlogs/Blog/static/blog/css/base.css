@@ -1,0 +1,199 @@
+body {
+  font-family: 'Nunito', sans-serif;
+  background-color: #fff;
+  color: #333;
+}
+/* -------for logo--------- */
+.logo-text {
+  font-family: 'Open Sans', sans-serif;
+  font-size: 24px;
+  letter-spacing: 1px;
+  position: relative;
+  color: #fbf5f5;
+  text-shadow: 2px 2px 3px rgba(0,0,0,0.2);
+  transition: all 0.3s;
+}
+
+.logo-text:hover {
+  text-shadow: 2px 2px 3px rgba(0,0,0,0.5);
+  transform: scale(1.05);
+}
+
+.logo-highlight {
+  font-size: 24px;
+
+/* The text color is set to transparent so only the background shows. */
+color: transparent; 
+
+/* This gradient defines the sequence of colors the text will cycle through. */
+background: linear-gradient(45deg, #F39C12, #E74C3C, #9B59B6, #3498DB);
+
+/* This clips the background to the text. */
+-webkit-background-clip: text;
+background-clip: text; 
+
+/* This animation changes the position of the background, making it look like the text is changing color. */
+animation: colors 5s infinite alternate;
+}
+
+@keyframes colors {
+  0% { background-position: 0% 50%; }
+  100% { background-position: 100% 50%; }
+}
+
+.content-section {
+  background: #ffffff;
+  padding: 10px 20px;
+  border: 1px solid #cbcbcb;
+  border-radius: 3px;
+  margin-bottom: 20px;
+}
+.article-title {
+  color: #444444;
+  text-decoration: none;
+}
+a.article-title:hover {
+  color: #428bca;
+  text-decoration: none;
+}
+
+.article-img {
+  height: 65px;
+  width: 65px;
+  margin-right: 16px;
+}
+.article-metadata {
+  padding-bottom: 1px;
+  margin-bottom: 4px;
+  border-bottom: 1px solid #e3e3e3;
+  text-decoration: none;
+  
+}
+.article-svg {
+  width: 25px;
+  height: 25px;
+  vertical-align: middle;
+}
+
+.article-metadata a {
+  font-weight: normal;   /* not bold */
+  color: #428bca;  /* deep gray */
+  text-decoration: none;  /* removes underline */
+}
+
+/* Styling for the post title */
+.article-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  color: #333;
+  text-decoration: none;
+  margin-top: 10px;
+  display: block;
+}
+
+
+/* Styling for the post content */
+.article-content {
+  font-size: 16px;
+  line-height: 1.5;
+  color: #555;
+  margin-top: 20px;
+}
+.article-content {
+  white-space: pre-line;
+  
+}
+
+/* Styling for the media content section for a slight spacing */
+.media.content-section {
+  margin-bottom: 30px;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 20px;
+}
+
+/* for footer */
+footer {
+  color: #0b0b0b; /* light color for the text */
+  font-family: 'Open Sans', sans-serif;
+  font-size: 16px;
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+
+/* for sidebar */
+.list-group-item-light {
+  background-color: #f8f9fa;
+}
+.text-muted{
+  font-weight: lighter;
+}
+.stylish-sidebar {
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  padding: 20px;
+  background: linear-gradient(145deg, #f8f8f8, #eee9e9);
+}
+
+.stylish-sidebar h3 {
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+.list-group-item-action {
+  transition: all 0.3s;
+}
+
+.list-group-item-action:hover {
+  background-color: #f5f5f5;
+}
+
+.list-group-item-action i {
+  margin-right: 10px;
+}
+
+/* for read more  */
+.read-more-link {
+  text-decoration: none;
+  color: #333; /* Default color */
+  position: relative;
+  margin-left: 8px; /* Separation from the content */
+  transition: color 0.3s;
+  font-size: small;
+}
+
+.read-more-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: #333; /* Default underline color */
+  transition: width 0.4s;
+}
+
+.read-more-link:hover {
+  color: #2424b9; /* Hover color */
+}
+
+.read-more-link:hover::after {
+  width: 100%;
+  background: #11a8b9; /* Hover underline color */
+}
+
+/* for the comment for the mobile view */
+
+/* For screens smaller than 768px */
+@media (max-width: 768px) {
+  .small-textarea {
+      font-size: 12px; /* Adjust this value as needed */
+  }
+}
+
+
+
+
+

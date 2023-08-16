@@ -1,5 +1,15 @@
 {% extends 'blog/base.html' %}
+{% load static %}
 {% block body %}
+<style>
+    /* For screens smaller than 768px */
+@media (max-width: 768px) {
+    .small-comment-textarea {
+        font-size: 12px; /* Adjust this value as needed */
+    }
+}
+
+</style>
 {% load humanize %}
 <article class="media content-section">
     <div class="media-body">
@@ -39,6 +49,25 @@
         <h3><a class="article-title" href="">{{ object.title }}</a></h3>
         <p class="article-content">{{ object.content }}</p>
     </div>
+    <div class="icons-container d-flex justify-content-center align-items-center">
+        
+        <!-- Like Icon -->
+        <a href="{% url 'like_post' object.id %}" class="icon-link like-btn d-flex align-items-center mx-3 text-decoration-none" data-post-id="{{ object.id }}">
+            <i class="{% if has_liked_post %}fas fa-heart text-danger{% else %}far fa-heart text-secondary {% endif %}" ></i>
+            <span class="icon-count ml-2 text-dark">{{ object.likes_count }}</span>
+        </a>
+        <!-- Comment Icon -->
+        <a href="{% url 'post-details' object.slug  %}#comments" class="icon-link comment-icon d-flex align-items-center mx-3 text-decoration-none">
+            <i class="far fa-comment text-dark" ></i>
+            <span class="icon-count ml-2 text-dark">{{ object.blogcomment_set.count }}</span>
+        </a>
+    
+        <!-- LinkedIn Share -->
+        <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri|add:object.get_absolute_url }}&title={{ post.title }}" target="_blank" class="icon-link d-flex align-items-center mx-3 text-decoration-none">
+            <i class="fab fa-linkedin text-primary" ></i>
+        </a>
+    
+    </div>
 </article>
 
 {% if not user.profile.slug == object.author.profile.slug %}
@@ -46,7 +75,7 @@
 <div class="row mt-3">
     {% csrf_token %}
     <div class="col-8 col-md-7">
-        <textarea name="comment" class="form-control" rows="1" placeholder=" Leave a comment..."></textarea>
+        <textarea name="comment" class="form-control .small-comment-textarea" rows="1" placeholder=" Leave a comment..."></textarea>
     </div>
     <div class="col-2 col-md-4 d-flex align-items-center">
         <button type="submit" class="btn btn-secondary btn-sm mr-4">
@@ -56,34 +85,51 @@
 </div>
 </form>
 {% endif %}
-
 <section class="mt-5">
     <h4 id="comments" class="mb-4">Comments ({{comments.count}})</h4>
     {% for comment in comments %}
-        <div class="card mb-3 p-1"> <!-- Increased padding and margin for the card -->
-            <div class="d-flex">
-                <!-- Left side for image -->
-                <div class="pr-3">
-                    <img class="rounded-circle" src="{{ comment.user.profile.profile_pic.url }}" alt="{{ comment.user.username }}" style="width: 50px; height: 50px;">
-                </div>
-                <!-- Right side for content -->
-                <div>
-                    <div class=" mb-2" > <!-- Added bottom margin for spacing between name/timestamp and the comment -->
+        <div class="card mb-3 p-3 shadow-sm"> 
+            <div class="d-flex align-items-start">  <!-- Flex container for the whole comment -->
+                
+                <!-- Left side: Image -->
+                <img class="rounded-circle border " src="{{ comment.user.profile.profile_pic.url }}" alt="{{ comment.user.username }}" style="width: 50px; height: 50px; margin-right: 20px;">
+                
+                <!-- Right side: Comment details -->
+                <div class="flex-grow-1">
+                    <!-- Username and delete button -->
+                    <div class="d-flex justify-content-between align-items-center mb-1">
                         {% if comment.user.profile.slug == user.profile.slug %}
-                            <a class="font-weight-bold mx-2 text-primary" href="{% url 'user_profile' %}" style="text-decoration: none;" >{{ comment.user.username }}</a>
+                            <a class="font-weight-bold text-primary" href="{% url 'user_profile' %}" style="text-decoration: none;">{{ comment.user.username }}</a>
                         {% else %}
-                            <a class="font-weight-bold mx-2" href="{% url 'user-profile-details' comment.user.profile.slug  %}" style="text-decoration: none;">{{ comment.user.username }}</a>
+                            <a class="font-weight-bold" href="{% url 'user-profile-details' comment.user.profile.slug  %}" style="text-decoration: none;">{{ comment.user.username }}</a>
                         {% endif %}
-                        <small class="text-muted">{{ comment.comment_posted_date|naturaltime }}</small>
+                        {% if request.user == comment.user %}
+                            <form method="post" action="{% url 'delete_comment' comment.id %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-transparent p-0 border-0" style="background: none;">
+                                    <i class="fa fa-trash text-danger"></i>
+                                </button>
+                            </form>
+                        {% endif %}
                     </div>
-                    <p class=" mx-2">{{ comment.comment }}</p> <!-- Removed bottom margin for the last paragraph in a container -->
+                    
+                    <!-- Comment Date -->
+                    <small class="text-muted d-block mb-2">{{ comment.comment_posted_date|naturaltime }}</small>
+                    
+                    <!-- Comment Content -->
+                    <p class="mb-0">{{ comment.comment }}</p>
                 </div>
             </div>
         </div>
     {% empty %}
-        <p class="text-muted mt-3">No comments yet. Be the first one to comment!</p> <!-- Added top margin for spacing -->
+        <p class="text-muted mt-3">No comments yet. Be the first one to comment!</p>
     {% endfor %}
 </section>
+
+
+
+
+
 <script>
    // Smooth scrolling to BSC Details section
    $('a[href^="#comments"]').on('click', function (event) {
@@ -92,8 +138,9 @@
       event.preventDefault();
       $('html, body').stop().animate({
         scrollTop: target.offset().top
-      }, 800);
+      }, 100);
     }
   });  
 </script>
+<script src="{% static 'js/like.js' %}"></script>
 {% endblock body %}

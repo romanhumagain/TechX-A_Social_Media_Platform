@@ -20,7 +20,7 @@ class PostListView(ListView):
     template_name = 'blog/home.html'
     context_object_name = 'posts'
     ordering = ['-date_posted']
-    paginate_by = 5
+    paginate_by = 10
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -49,6 +49,10 @@ class PostDetailsView(DetailView):
     context = super().get_context_data(**kwargs)
     post = get_object_or_404(BlogPost, slug = self.kwargs.get('slug'))
     context['comments'] = BlogComment.objects.filter(post = post).order_by('-comment_posted_date')
+    
+    if self.request.user.is_authenticated:
+            has_liked_post = Like.objects.filter(user=self.request.user , post = post).exists()
+            context['has_liked_post'] = has_liked_post
     return context
   
 class PostCreateView(LoginRequiredMixin , CreateView):
@@ -106,6 +110,10 @@ class UserProfileDetailsView(LoginRequiredMixin, View):
             'page_obj':page_obj,
             'is_following':is_following
             }
+        
+        if self.request.user.is_authenticated:
+            user_liked_post_ids = Like.objects.filter(user=self.request.user).values_list('post__id', flat=True)
+            context['user_liked_post_ids'] = list(user_liked_post_ids)
         return render(request, 'blog/view_other_profile.html', context)
       
 class PostCommentView(LoginRequiredMixin, View):
@@ -128,18 +136,24 @@ from django.db import transaction
 @login_required
 def like_post(request, post_id):
     post = get_object_or_404(BlogPost, id=post_id)
-    like = Like.objects.filter(post=post, user=request.user).first()
+    liked = False
 
-    with transaction.atomic():  # Start of the atomic transaction
+    with transaction.atomic():
+        like = Like.objects.filter(post=post, user=request.user).first()
         if like:
             like.delete()
             BlogPost.objects.filter(id=post_id).update(likes_count=models.F('likes_count') - 1)
         else:
             Like.objects.create(post=post, user=request.user)
             BlogPost.objects.filter(id=post_id).update(likes_count=models.F('likes_count') + 1)
+            liked = True
 
-    return redirect(request.META.get('HTTP_REFERER', 'default_url'))
+    return JsonResponse({'liked': liked, 'likes_count': post.likes_count})
     
+class CommentDeleteView(LoginRequiredMixin, View):
+  def post(self , request , *args , **kwargs):
+    comment = BlogComment.objects.filter(id = kwargs.get('comment_id') , user = request.user).first()
+    if comment:
+      comment.delete()
+    return redirect('post-details' , slug = comment.post.slug)
   
-def about(request):
-  return render(request ,'blog/about.html',{'title':"About"} )

@@ -10,9 +10,9 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
-from Blog.models import BlogPost
+from Blog.models import BlogPost, Like
 from django.core.paginator import Paginator
-from . models import Profile , Follow
+from . models import Profile , Follow 
 
 def register_user(request):
     if request.method == 'POST':
@@ -51,7 +51,6 @@ class LoginView(View):
             messages.error(request ,'Invalid Credentials')
             return redirect('login_user')
 
-
 class ProfileDetailsView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = User
     template_name = 'users/profile.html'
@@ -82,6 +81,9 @@ class ProfileDetailsView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
             page_obj = posts.filter(title__icontains = search)
         
         context['page_obj'] = page_obj
+        if self.request.user.is_authenticated:
+            user_liked_post_ids = Like.objects.filter(user=self.request.user).values_list('post__id', flat=True)
+            context['user_liked_post_ids'] = list(user_liked_post_ids)
         context['title'] = 'Profile'
         return context
 
