@@ -5,6 +5,7 @@ from Blog.utils import generate_slugs
 
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    previous_logged_in_date = models.DateTimeField(null=True , blank=True)
     slug = models.SlugField(null=True,unique=True)
     profile_pic = models.ImageField(default='profile_pics/default.jpg', upload_to='profile_pics')
     bio = models.TextField(max_length=200, null=True, default=None)

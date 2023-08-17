@@ -21,7 +21,7 @@
       <!-- Displaying Last Login Time Here -->
       <div class="d-flex align-items-center mb-2">
         <i class="fas fa-clock mr-2"></i>
-        <span>Last logged in: {{ user.last_login|date:"F j, Y, g:i A" }}</span>
+        <span>Last logged in: {{ user.profile.previous_logged_in_date|date:"F j, Y" }}</span>
       </div>
       <hr>
       <div class="d-flex align-items-center mb-3">

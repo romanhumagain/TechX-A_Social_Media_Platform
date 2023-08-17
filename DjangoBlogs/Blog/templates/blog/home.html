@@ -44,8 +44,7 @@
         <!-- Like Icon -->
         <a href="{% url 'like_post' post.id %}"
             class="icon-link like-btn d-flex align-items-center mx-3 text-decoration-none" data-post-id="{{ post.id }}">
-            <i
-                class="{% if post.id in user_liked_post_ids %}fas fa-heart text-danger{% else %}far fa-heart text-secondary {% endif %}"></i>
+            <i class="{% if post.id in user_liked_post_ids %}fas fa-heart text-danger{% else %}far fa-heart text-secondary {% endif %}"></i>
             <span class="icon-count ml-2 text-dark">{{ post.likes_count }}</span>
         </a>
        

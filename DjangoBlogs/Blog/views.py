@@ -14,6 +14,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden
 
 class PostListView(ListView):
     model = BlogPost
@@ -133,27 +134,41 @@ class PostCommentView(LoginRequiredMixin, View):
 
 from django.db import transaction
 
-@login_required
-def like_post(request, post_id):
-    post = get_object_or_404(BlogPost, id=post_id)
-    liked = False
 
-    with transaction.atomic():
-        like = Like.objects.filter(post=post, user=request.user).first()
-        if like:
-            like.delete()
-            BlogPost.objects.filter(id=post_id).update(likes_count=models.F('likes_count') - 1)
-        else:
-            Like.objects.create(post=post, user=request.user)
-            BlogPost.objects.filter(id=post_id).update(likes_count=models.F('likes_count') + 1)
-            liked = True
+class LikePostView(LoginRequiredMixin, View):
+    def post(self, request, post_id, *args, **kwargs):
+        post = get_object_or_404(BlogPost, id=post_id)
+        liked = False
 
-    return JsonResponse({'liked': liked, 'likes_count': post.likes_count})
+        with transaction.atomic():
+            like = Like.objects.filter(post=post, user=request.user).first()
+            if like:
+                like.delete()
+                BlogPost.objects.filter(id=post_id).update(likes_count=models.F('likes_count') - 1)
+            else:
+                Like.objects.create(post=post, user=request.user)
+                BlogPost.objects.filter(id=post_id).update(likes_count=models.F('likes_count') + 1)
+                liked = True
+
+        return JsonResponse({'liked': liked, 'likes_count': post.likes_count})
     
-class CommentDeleteView(LoginRequiredMixin, View):
-  def post(self , request , *args , **kwargs):
-    comment = BlogComment.objects.filter(id = kwargs.get('comment_id') , user = request.user).first()
-    if comment:
-      comment.delete()
-    return redirect('post-details' , slug = comment.post.slug)
-  
+
+class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
+
+    def get_comment(self):
+        return BlogComment.objects.filter(id=self.kwargs.get('comment_id'), user=self.request.user).first()
+
+    def test_func(self):
+        self.comment = self.get_comment()
+        if not self.comment:
+            return False
+        return self.request.user == self.comment.user
+
+    def post(self, request, *args, **kwargs):
+        if self.comment:  # Since test_func is called before post, self.comment will be set.
+            post_slug = self.comment.post.slug
+            self.comment.delete()
+            return redirect('post-details', slug=post_slug)
+        else:
+            return HttpResponseForbidden('Comment not found or you are not the owner.')
+

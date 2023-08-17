@@ -21,7 +21,7 @@ class BlogPost(models.Model):
 
     
   def __str__(self) -> str:
-    return self.title
+    return f'{self.title} by ({self.author})'
   
   def get_absolute_url(self):
     return reverse('post-details' , kwargs={'slug':self.slug})
@@ -34,14 +34,14 @@ class BlogComment(models.Model):
   comment_posted_date = models.DateTimeField(default= timezone.now)
   
   def __str__(self) -> str:
-    return "comment by " + self.user.username + "on " + self.post.title
+    return f'commented by {self.user.username} on {self.post.author}`s {self.post} post'
   
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
     
     def __str__(self):
-      return f'liked by{self.user.username} on {self.post.title}'
+      return f'liked by {self.user.username } on {self.post.author}`s {self.post} post'
     
     class Meta:
         unique_together = ('user', 'post')

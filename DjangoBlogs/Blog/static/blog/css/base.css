@@ -113,7 +113,7 @@ a.article-title:hover {
 
 /* for footer */
 footer {
-  color: #0b0b0b; /* light color for the text */
+  color: #5c5b5b; /* light color for the text */
   font-family: 'Open Sans', sans-serif;
   font-size: 16px;
   text-align: center;
@@ -192,7 +192,6 @@ footer {
       font-size: 12px; /* Adjust this value as needed */
   }
 }
-
 
 
 
