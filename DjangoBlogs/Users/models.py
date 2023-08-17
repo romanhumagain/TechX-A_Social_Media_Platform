@@ -8,7 +8,7 @@ class Profile(models.Model):
     previous_logged_in_date = models.DateTimeField(null=True , blank=True)
     slug = models.SlugField(null=True,unique=True)
     profile_pic = models.ImageField(default='profile_pics/default.jpg', upload_to='profile_pics')
-    bio = models.TextField(max_length=200, null=True, default=None)
+    bio = models.TextField(null=True, default=None)
     follower_count = models.IntegerField(null=True, default=0)
     following = models.ManyToManyField('self' , through = 'Follow' , related_name='followers' , symmetrical=False)
     def __str__(self) -> str:

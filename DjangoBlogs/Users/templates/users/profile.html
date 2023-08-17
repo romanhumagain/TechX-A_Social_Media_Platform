@@ -1,7 +1,7 @@
 {% extends "blog/base.html" %}
 {% load static %}
 {% block search_bar %}
-<form>
+<form autocomplete="off">
   <div class="input-group mb-4">
     <input type="text" class="form-control" name="search" placeholder="Search your articles..." aria-label="Search">
     <button class="btn btn-outline-secondary" type="submit" id="search-button"><i class="fas fa-search"></i></button>
