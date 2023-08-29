@@ -26,13 +26,10 @@ admin.site.site_title = "TechBlog Admin Panel"
 admin.site.index_title = "TechBlog Admin Panel"
 
 urlpatterns = [
-    path('admin/site', admin.site.urls),
-    path('' , include('Blog.urls')),
-    path('user/' , include('Users.urls')),
-    
-    
-    
+    path('admin/', admin.site.urls),
+    path('', include('Blog.urls')),
+    path('user/', include('Users.urls')),
+   
 ]
-
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from Users.views import register_user , register_user, LoginView , UpdateProfileView , ProfileDetailsView , follow, unfollow
+from Users.views import register_user, LoginView , UpdateProfileView , ProfileDetailsView , follow, unfollow
 urlpatterns = [
   path('register/', register_user , name="register_user" ),
   path('login/', LoginView.as_view() , name="login_user" ),

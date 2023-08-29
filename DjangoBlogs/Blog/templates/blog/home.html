@@ -31,6 +31,11 @@
                 <small class="text-muted">{{ post.date_posted|date:"j M, Y" }}</small>
             </div>
         </div>
+        {% if post.image %}    
+        <div class="d-flex justify-content-center">
+            <img src="{{ post.image.url }}" alt="{{ post.title }}" style="max-width: 550px; max-height: 280px;">
+        </div>
+        {% endif %}
 
         <h3 class="mt-2"><a class="article-title" href="{% url 'post-details' post.slug %}">{{ post.title }}</a></h3>
         <p class="article-content" style="display: inline;">{{ post.content|truncatewords:120 }}</p>
@@ -38,7 +43,10 @@
         <a href="{% url 'post-details' post.slug %}" class="read-more-link">Read More</a>
         {% endif %}
 
+        
+
     </div>
+        
     <div class="icons-container d-flex justify-content-center align-items-center mt-3">
 
         <!-- Like Icon -->
@@ -109,5 +117,5 @@
         </ul>
     </nav>
 </div>
-<script src="{% static 'js/like.js' %}"></script>
+<script src="{% static 'js/likes.js' %}"></script>
 {% endblock body %}

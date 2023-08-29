@@ -48,6 +48,11 @@
             </div>
             {% endif %}
         </div>
+        {% if object.image %}    
+    <div class="d-flex justify-content-center">
+        <img src="{{ object.image.url }}" alt="{{ post.title }}" style="max-width: 550px; max-height: 280px;">
+    </div>
+    {% endif %}
 
         <!-- Article Title and Content -->
         <h3><a class="article-title" href="">{{ object.title }}</a></h3>
@@ -151,5 +156,5 @@
         }
     });  
 </script>
-<script src="{% static 'js/like.js' %}"></script>
+<script src="{% static 'js/likes.js' %}"></script>
 {% endblock body %}

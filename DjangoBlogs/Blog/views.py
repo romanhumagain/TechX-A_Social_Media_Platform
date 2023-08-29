@@ -134,24 +134,24 @@ class PostCommentView(LoginRequiredMixin, View):
 
 from django.db import transaction
 
-
 class LikePostView(LoginRequiredMixin, View):
     def post(self, request, post_id, *args, **kwargs):
         post = get_object_or_404(BlogPost, id=post_id)
         liked = False
 
         with transaction.atomic():
-            like = Like.objects.filter(post=post, user=request.user).first()
-            if like:
-                like.delete()
+            like_instance = Like.objects.filter(post=post, user=request.user).first()
+            if like_instance:
+                like_instance.delete()
                 BlogPost.objects.filter(id=post_id).update(likes_count=models.F('likes_count') - 1)
             else:
                 Like.objects.create(post=post, user=request.user)
                 BlogPost.objects.filter(id=post_id).update(likes_count=models.F('likes_count') + 1)
                 liked = True
 
+        post.refresh_from_db()
         return JsonResponse({'liked': liked, 'likes_count': post.likes_count})
-    
+
 
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
 

@@ -10,6 +10,7 @@ class BlogPost(models.Model):
   slug = models.SlugField(null=True,unique=True)
   title = models.CharField(max_length=100)
   content = models.TextField()
+  image = models.ImageField(null= True , blank=True, upload_to='blog_image')
   date_posted = models.DateTimeField(default = timezone.now)
   likes_count = models.IntegerField(null=True, default=0)
   
