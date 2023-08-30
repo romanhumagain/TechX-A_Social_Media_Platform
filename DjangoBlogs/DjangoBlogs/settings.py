@@ -32,6 +32,7 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'django.contrib.sites',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -46,6 +47,10 @@ EXTERNAL_APPS = [
     'Users.apps.UsersConfig',
     'crispy_forms',
     'crispy_bootstrap4',
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     
 ]
 INSTALLED_APPS+=EXTERNAL_APPS
@@ -58,6 +63,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
 ROOT_URLCONF = 'DjangoBlogs.urls'
@@ -152,3 +162,19 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.environ.get('TECHBLOG_EMAIL_USERNAME')
 EMAIL_HOST_PASSWORD = os.environ.get('TECHBLOG_EMAIL_PASSWORD')
 EMAIL_USE_TLS = True
+
+
+SITE_ID = 4
+LOGIN_REDIRECT_URL = '/'
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'online',
+        }
+    }
+}

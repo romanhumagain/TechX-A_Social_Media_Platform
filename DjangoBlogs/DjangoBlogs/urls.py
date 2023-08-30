@@ -28,6 +28,7 @@ admin.site.index_title = "TechBlog Admin Panel"
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('Blog.urls')),
+    path('accounts/' ,include('allauth.urls')),
     path('user/', include('Users.urls')),
    
 ]

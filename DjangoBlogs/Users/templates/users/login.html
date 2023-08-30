@@ -1,5 +1,38 @@
 {% extends "blog/base.html" %}
+{% load socialaccount %}
 {% block body %}
+<style>
+   .google-login {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .btn-google {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            border-radius: 4px;
+            border: 2px solid #00cbf9;
+            background-color: white;
+            color: rgb(55, 54, 54);
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn:hover {
+            background-color: #f8f8f8;
+            color: rgb(55, 54, 54);
+        }
+
+        .btn img {
+            width: 24px;
+            height: 24px;
+            margin-right: 8px;
+            background-color: white; /* Ensure the logo blends with the button */
+        }
+</style>
 {% if messages %}
 <div class="row justify-content-center">
   <div class="col-md-6">
@@ -43,6 +76,13 @@
             </small>
           </div>
         </form>
+        <div class="google-login text-center mt-3">
+          <a href="/accounts/google/login/?process=login" class="btn-google btn btn-info">
+              <img src="/static/images/google.png" alt="Google Logo">
+              Sign in with Google
+          </a>
+      </div>
+
         <div class="mt-3 text-center">
           <span>Need an account? </span><a href="{% url 'register_user' %}" class="text-info">Sign up now</a>
         </div>
