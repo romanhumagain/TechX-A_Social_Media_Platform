@@ -10,7 +10,7 @@
                     <h4>Create Blog Post</h4>
                 </div>
                 <div class="card-body">
-                    <form method="POST" class="m-3 custom-blog-form" enctype="multipart/form-data">
+                    <form method="POST" class="m-3 custom-blog-form" enctype="multipart/form-data" novalidate>
                         {% csrf_token %}
                         <fieldset class="form-group">
                             {{ form|crispy }}
