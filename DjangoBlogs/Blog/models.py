@@ -66,6 +66,16 @@ class Notification(models.Model):
   
   def __str__(self):
      return f"Notification for {self.receiver}: {self.message}"
+   
+   
+class MessageApp(models.Model):
+  receiver = models.ForeignKey(User , on_delete=models.CASCADE , related_name='receiving_person')
+  sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sending_person')
+  message = models.TextField()
+  
+   
+   
+
   
   
   
