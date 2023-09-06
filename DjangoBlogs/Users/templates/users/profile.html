@@ -9,6 +9,90 @@
 </form>
 {% endblock %}
 {% block body %}
+<style>
+  .logo-admin {
+    font-size: 24px;
+
+    /* The text color is set to transparent so only the background shows. */
+    color: transparent;
+
+    /* This gradient defines the sequence of colors the text will cycle through. */
+    background: linear-gradient(30deg, #52d296, #0099ff);
+
+    /* This clips the background to the text. */
+    -webkit-background-clip: text;
+    background-clip: text;
+
+    /* This animation changes the position of the background, making it look like the text is changing color. */
+    animation: colors 5s infinite alternate;
+  }
+
+  .followers-following .followers a,
+  .followers-following .following a,
+  .update-profile,
+  .follow-modal {
+    padding: 6px 11px;
+    border-radius: 17px;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .follow-modal button {
+    padding: 6px 11px;
+    border-radius: 17px;
+    border: none;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+
+  .followers-following .follow-modal a {
+    padding: 5px 5px;
+    border-radius: 16px;
+    transition: background 0.2s ease, transform 0.2s ease;
+
+  }
+
+  .followers-following .followers a:hover,
+  .followers-following .following a:hover,
+  .followers-following .follow-modal a:hover,
+  .update-profile {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .followers-following .followers a {
+    background: #007afc1a;
+    text-decoration: none;
+  }
+
+  .followers-following .following a {
+    background: rgba(48, 171, 77, 0.1);
+    text-decoration: none;
+  }
+
+  .followers-following .follow-modal a {
+    background: rgba(245, 58, 58, 0.1);
+    text-decoration: none;
+  }
+  .followers-following .follow-modal button {
+    background: rgba(245, 58, 58, 0.1);
+    text-decoration: none;
+  }
+
+  .modal-search {
+    border-bottom: 1px solid #dee2e6;
+    /* Light gray border */
+  }
+
+  .modal-body li {
+    transition: background-color 0.2s ease;
+  }
+
+  .modal-body li:hover {
+    background-color: #f3f3f3;
+    /* Very light gray for hover effect */
+  }
+</style>
+
+
+
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-4 text-center">
@@ -16,22 +100,52 @@
         style="border-radius: 50%; width: 200px; height: 200px;">
     </div>
     <div class="col-md-8">
-      <h2>{{ user.username }}</h2>
+      <div class="d-flex align-items-center">
+        <h2 class="mr-3">{{ user.username }}</h2>
+
+        {% if request.user.is_superuser or request.user.is_staff %}
+        <!-- Link to Admin/Settings page with cog icon -->
+        <a href="/admin/" title="Admin Site" class="mx-3">
+          <i class="fas fa-user-cog fs-2 logo-admin"></i>
+        </a>
+
+        {% endif %}
+      </div>
       <p class="text-muted">{{ user.profile.bio }}</p>
+
       <!-- Displaying Last Login Time Here -->
       <div class="d-flex align-items-center mb-2">
-        <i class="fas fa-clock mr-2"></i>
+        <i class="fas fa-clock me-2"></i>
         <span>Last logged in: {{ user.profile.previous_logged_in_date|date:"F j, Y" }}</span>
       </div>
       <hr>
-      <div class="d-flex align-items-center mb-3">
-        <i class="fas fa-users m-1"></i>
-        <span>{{ user.profile.follower_count }} Followers</span>
+
+      <div class="followers-following d-flex align-items-center mb-3">
+
+        <!-- Followers Modal Trigger -->
+        <div class="followers d-flex align-items-center">
+          <a href="#" class="d-flex align-items-center link-info" data-bs-toggle="modal"
+            data-bs-target="#followerModal">
+            <i class="fas fa-users me-2"></i>
+            <span>{{ user.profile.follower_count }} Followers</span>
+          </a>
+        </div>
+
+        <!-- Following Modal Trigger -->
+        <div class="following d-flex align-items-center mx-3">
+          <a href="#" class="d-flex align-items-center link-success" data-bs-toggle="modal"
+            data-bs-target="#followingModal">
+            <i class="fas fa-user-check me-2"></i>
+            <span>{{ user.profile.following_count }} Following</span>
+          </a>
+        </div>
+
       </div>
-      <a href="{% url 'update_profile' %}" class="btn btn-outline-secondary">
+      <a href="{% url 'update_profile' %}" class="btn update-profile btn-outline-secondary">
         <i class="fas fa-user"></i> Update Profile
       </a>
     </div>
+
   </div>
 </div>
 <hr>
@@ -131,4 +245,145 @@
 
 {% endif %}
 <script src="{% static 'js/likes.js' %}"></script>
+
+
+
+<!-- ===== MODAL FOR THE FOLLOWER LIST======= -->
+
+
+<div class="modal fade" id="followerModal" tabindex="-1" aria-labelledby="followingModalLabel" aria-hidden="true">
+  <div class="modal-dialog"> <!-- Retained modal-lg for a bigger modal -->
+    <div class="modal-content">
+      <div class="modal-header ">
+        <h1 class="modal-title fs-5" id="followerModalLabel">Followers</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <!-- Search bar -->
+      <!-- <div class="modal-search p-3">
+        <input type="text" class="form-control" placeholder="Search followers...">
+      </div> -->
+      <!-- Modal body with scrollbar -->
+      <div class="modal-body" style="overflow-y: auto; max-height: 300px;">
+        {% if followers %}
+        <ul class="list-unstyled">
+          {% for follower in followers %}
+          <li class="d-flex align-items-center justify-content-between mb-3">
+            
+            <!-- Left Part: Image and Username -->
+            <div class="d-flex align-items-center">
+              <img src="{{follower.follower.user.profile.profile_pic.url}}"
+                alt="{{ follower.follower.user.username }}'s Profile Picture"
+                style="border-radius: 50%; width:50px ; height:50px ">
+              <a href="{% url 'user-profile-details' follower.follower.slug %}" class="text-dark text-decoration-none ms-3">
+                {{follower.follower.user.username}}
+              </a>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted ">No followers yet. Keep posting and engaging!</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- ====== MODAL FOR FOLLOWING ===== -->
+<div class="modal fade" id="followingModal" tabindex="-1" aria-labelledby="followingModalLabel" aria-hidden="true">
+  <div class="modal-dialog ">
+    <div class="modal-content">
+      <div class="modal-header  d-flex justify-content-center align-items-center">
+        <h1 class="modal-title fs-5" id="followerModalLabel">Following</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    </div>
+    
+      <!-- Modal body with scrollbar -->
+      <div class="modal-body" style="overflow-y: auto; max-height: 300px;">
+        {% if followings %}
+        <ul class="list-unstyled">
+          {% for following in followings %}
+          <li class="d-flex align-items-center justify-content-between mb-3">
+
+            <!-- Left Part: Image and Username -->
+            <div class="d-flex align-items-center">
+              <img src="{{following.followed.user.profile.profile_pic.url}}"
+                alt="{{ following.followed.user.username }}'s Profile Picture"
+                style="border-radius: 50%; width:50px ; height:50px ">
+              <a href="{% url 'user-profile-details' following.followed.slug %}"
+                class="text-dark text-decoration-none ms-3">
+                {{following.followed.user.username}}
+              </a>
+            </div>
+
+            <!-- Right Part: Unfollow Button -->
+            <div class="followers-following">
+                <div class="follow-modal">
+              <button href="#" class="d-flex align-items-center link-danger follow-btn"
+                data-action="unfollow"
+                data-slug="{{ following.followed.slug }}">
+                <i class="fas fa-user-minus me-1"></i>
+                <span>Unfollow</span>
+              </button>
+              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+            </div>
+            </div>
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p class="text-muted ">You haven't followed anyone yet. Explore and connect!</p>
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  $(document).ready(function() {
+
+$('.follow-btn').on('click', function(e) {
+    e.preventDefault();
+
+    const $this = $(this);
+    const action = $this.data('action');
+    const slug = $this.data('slug');
+    let url;
+
+    if (action === 'unfollow') {
+        url = `/user/unfollow/${slug}/`;
+    } else {
+        console.error('Invalid action');
+        return;
+    }
+
+    // AJAX request
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(response) {
+            if (response.success) { 
+                // Remove the list item of the unfollowed user
+                $this.closest('li').remove();
+
+                 // Update the following count of the logged-in user
+                $('.following span').text(response.following_count + ' Following');
+                
+            } else {
+                console.error('Failed to unfollow');
+            }
+        }
+    });
+});
+});
+
+
+</script>
+
 {% endblock %}

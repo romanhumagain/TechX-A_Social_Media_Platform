@@ -1,3 +1,4 @@
+from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
@@ -10,7 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
 from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
-from Blog.models import BlogPost, Like
+from Blog.models import BlogPost, Like , Notification
 from django.core.paginator import Paginator
 from . models import Profile , Follow 
 
@@ -81,9 +82,19 @@ class ProfileDetailsView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
             page_obj = posts.filter(title__icontains = search)
         
         context['page_obj'] = page_obj
+        
         if self.request.user.is_authenticated:
             user_liked_post_ids = Like.objects.filter(user=self.request.user).values_list('post__id', flat=True)
             context['user_liked_post_ids'] = list(user_liked_post_ids)
+        
+        profile =  Profile.objects.get(user = self.request.user)
+        
+        followers = profile.follower_set.all()
+        followings = profile.following_set.all()
+        
+        context['followers'] = followers
+        context['followings'] = followings
+        
         context['title'] = 'Profile'
         return context
 
@@ -125,24 +136,48 @@ class UpdateProfileView(LoginRequiredMixin, View):
 @login_required
 def follow(request, slug):
     target_profile = get_object_or_404(Profile, slug=slug)
+    login_user_profile = get_object_or_404(Profile , user = request.user)
+
     if not Follow.objects.filter(follower=request.user.profile, followed=target_profile).exists() and request.user.profile != target_profile:
         Follow.objects.create(follower=request.user.profile, followed=target_profile)
         
         # Increase the follower count
         target_profile.follower_count += 1
         target_profile.save()
-
+        
+        login_user_profile.following_count += 1
+        login_user_profile.save()
+        
+        notification, created= Notification.objects.get_or_create(
+            receiver = target_profile.user,
+            sender = request.user,
+            type = "follow", 
+        )
+        
+        if not created:
+            notification.timestamp = timezone.now()
+            notification.save()
+            
+        notification.message = f"{request.user.username} started following you."
+        notification.save()
+        
+    
         return JsonResponse({'success': True, 'follower_count': target_profile.follower_count})
     return JsonResponse({'success': False})
 
 @login_required
 def unfollow(request, slug):
     target_profile = get_object_or_404(Profile, slug=slug)
+    login_user_profile = get_object_or_404(Profile , user = request.user)
+    
     unfollowed = Follow.objects.filter(follower=request.user.profile, followed=target_profile).delete()
     
     # Decrease the follower count if someone was unfollowed
     if unfollowed[0]:  # [0] because .delete() returns a tuple (num_deleted, details)
-        target_profile.follower_count -= 1
+        target_profile.follower_count  -= 1
         target_profile.save()
+        
+        login_user_profile.following_count -= 1
+        login_user_profile.save()
 
-    return JsonResponse({'success': True, 'follower_count': target_profile.follower_count})
+    return JsonResponse({'success': True, 'follower_count': target_profile.follower_count,'following_count': login_user_profile.following_count })

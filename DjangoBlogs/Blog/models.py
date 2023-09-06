@@ -40,12 +40,33 @@ class BlogComment(models.Model):
 class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(BlogPost, on_delete=models.CASCADE)
+    timestamp = models.DateTimeField(auto_now_add=True)
     
     def __str__(self):
       return f'liked by {self.user.username } on {self.post.author}`s {self.post} post'
     
     class Meta:
         unique_together = ('user', 'post')
+        
+        
+class Notification(models.Model):
+  TYPES = (
+    ('comment', 'comment'),
+    ('like', 'like'),
+    ('follow', 'follow')
+  )
+  
+  receiver = models.ForeignKey(User , on_delete=models.CASCADE)
+  sender = models.ForeignKey(User , on_delete = models.SET_NULL , null=True, related_name= '+' )
+  type = models.CharField(choices=TYPES , max_length=10)
+  post = models.ForeignKey(BlogPost , on_delete=models.SET_NULL, null=True)
+  message = models.TextField(null=True, blank=True)
+  timestamp = models.DateTimeField(auto_now_add=True)
+  is_read = models.BooleanField(default=False)
+  
+  def __str__(self):
+     return f"Notification for {self.receiver}: {self.message}"
+  
   
   
   

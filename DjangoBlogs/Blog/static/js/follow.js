@@ -30,11 +30,11 @@ $(document).ready(function() {
                   if (action === 'follow') {
                       $this.html('<i class="fas fa-user-minus"></i> Unfollow')
                           .data('action', 'unfollow')
-                          .toggleClass('btn-outline-secondary btn-secondary');
+                          .toggleClass('btn-primary btn-primary');
                   } else {
                       $this.html('<i class="fas fa-user-plus"></i> Follow')
                           .data('action', 'follow')
-                          .toggleClass('btn-outline-secondary btn-secondary');
+                          .toggleClass('btn-primary btn-primary');
                   }
       
                   // Update the follower count in the DOM

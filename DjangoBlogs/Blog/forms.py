@@ -2,6 +2,7 @@ from django import forms
 from . models import BlogPost
 
 
+
 class BlogPostForm(forms.ModelForm):
     title = forms.CharField(
         label="Title of the Post",
@@ -11,7 +12,7 @@ class BlogPostForm(forms.ModelForm):
     
     content = forms.CharField(
         label="Post Content",
-        widget=forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}))
+        widget=forms.Textarea(attrs={'rows': 6, 'class': 'form-control'}))
     image = forms.ImageField(required=False)
     
     class Meta:

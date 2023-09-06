@@ -28,8 +28,8 @@ class PostListView(ListView):
         search = self.request.GET.get('search')
         if search:
             queryset = queryset.filter(Q(title__icontains=search)|
-                                       Q(content__icontains=search)|
-                                       Q(author__username__icontains=search))
+                                       Q(content__icontains=search)
+                                       )
         return queryset
 
     def get_context_data(self, **kwargs):
@@ -38,7 +38,7 @@ class PostListView(ListView):
         if self.request.user.is_authenticated:
             user_liked_post_ids = Like.objects.filter(user=self.request.user).values_list('post__id', flat=True)
             context['user_liked_post_ids'] = list(user_liked_post_ids)
-
+                    
         return context
        
 
@@ -120,7 +120,7 @@ class UserProfileDetailsView(LoginRequiredMixin, View):
 class PostCommentView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         post = get_object_or_404(BlogPost, slug=kwargs.get('slug'))
-        
+        post_author = post.author
         comment_text = request.POST.get('comment')
 
         if not comment_text:
@@ -130,6 +130,13 @@ class PostCommentView(LoginRequiredMixin, View):
         BlogComment.objects.create(user=request.user, post=post, comment=comment_text)
         
         messages.success(request, "Successfully added comment!")
+        
+        notification = Notification.objects.create(receiver = post_author,
+                                                   sender = request.user,
+                                                   post = post,
+                                                   type = "comment",
+                                                   message = f"{request.user.username} commented on your post."
+                                                   )
         return redirect('post-details', slug=post.slug)
 
 from django.db import transaction
@@ -147,10 +154,30 @@ class LikePostView(LoginRequiredMixin, View):
             else:
                 Like.objects.create(post=post, user=request.user)
                 BlogPost.objects.filter(id=post_id).update(likes_count=models.F('likes_count') + 1)
+                
+                if post.author != request.user:
+                    # Get or create the notification
+                    notification, created = Notification.objects.get_or_create(
+                        receiver=post.author,
+                        sender=request.user,
+                        type="like",
+                        post=post
+                    )
+
+                    # If the notification was already there, update its timestamp
+                    if not created:
+                        notification.timestamp = timezone.now()
+                        notification.save()
+
+                    notification.message = f"{request.user.username} liked your post."
+                    notification.save()
+                
                 liked = True
 
         post.refresh_from_db()
         return JsonResponse({'liked': liked, 'likes_count': post.likes_count})
+
+    
 
 
 class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
@@ -171,4 +198,25 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
             return redirect('post-details', slug=post_slug)
         else:
             return HttpResponseForbidden('Comment not found or you are not the owner.')
+        
+        
+class ViewNotification(LoginRequiredMixin , View):
+    def get(self, request , *args , **kwargs):
+        notifications = Notification.objects.filter(receiver = request.user).order_by('-timestamp')
+        
+        for notification in notifications:
+            notification.is_read = True
+            notification.save()
+            
+        context = {'notifications':notifications}
+
+        return render(request, 'blog/notification.html' , context)
+
+def search_user(request):
+    search = request.GET.get('search')
+    results = User.objects.filter(username__icontains=search)
+    return render(request, 'blog/search.html', {'results': results})
+
+
+    
 

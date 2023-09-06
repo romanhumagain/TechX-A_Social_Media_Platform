@@ -26,19 +26,32 @@
               <i class="fas fa-users m-1"></i>
               <span class="follower-count">{{ target_user.profile.follower_count }} Followers</span>
           </div>
+
           
           <!-- Follow/Unfollow Button Container -->
           <div class="mt-2 mt-md-0">
-              <button class="btn btn-outline-secondary follow-btn btn-sm mx-2"
-                  data-action="{% if is_following %}unfollow{% else %}follow{% endif %}"
-                  data-slug="{{ target_user.profile.slug }}">
-                  {% if is_following %}
-                  <i class="fas fa-user-minus"></i> Unfollow
-                  {% else %}
-                  <i class="fas fa-user-plus"></i> Follow
-                  {% endif %}
-              </button>
-              <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            {% if is_following %}
+            <button class="btn btn-secondary follow-btn btn-sm mx-2" 
+            data-action="unfollow"
+            data-slug="{{ target_user.profile.slug }}"
+            style="
+                  padding: 6px 10px;
+                  border-radius: 16px;">
+            <i class="fas fa-user-minus"></i> Unfollow
+          </button>
+          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
+            {% else %}
+            <button class="btn btn-primary follow-btn btn-sm mx-2" 
+            data-action="follow"
+            data-slug="{{ target_user.profile.slug }}"
+            style="
+                   padding: 6px 10px;
+                  border-radius: 16px;">
+            <i class="fas fa-user-plus"></i> Follow
+          </button>
+          <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+            {% endif %}
           </div>
       </div>
   </div>
@@ -149,7 +162,61 @@
 <input type="hidden" name="csrfmiddlewaretoken" value="{{ csrf_token }}"> <!-- Add this line for the CSRF token -->
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- jQuery library -->
-<script src="{% static 'js/follow.js' %}"></script> <!-- Link to the AJAX script -->
+<!-- <script src="{% static 'js/follow.js' %}"></script>  -->
 <script src="{% static 'js/likes.js' %}"></script>
+
+<script>
+$(document).on('click', '.follow-btn', function(e) {
+    e.preventDefault();
+
+    const $this = $(this);
+    const action = $this.data('action');
+    const slug = $this.data('slug');
+    let url;
+
+    if (action === 'follow') {
+        url = `/user/follow/${slug}/`;
+    } else if (action === 'unfollow') {
+        url = `/user/unfollow/${slug}/`;
+    } else {
+        console.error('Invalid action');
+        return;
+    }
+
+    $.ajax({
+        type: 'POST',
+        url: url,
+        data: {
+            'csrfmiddlewaretoken': $('input[name=csrfmiddlewaretoken]').val()
+        },
+        success: function(response) {
+            console.log("Server Response:", response);
+
+            if (response.success) {
+                if (action === 'follow') {
+                    $this.html('<i class="fas fa-user-minus"></i> Unfollow')
+                        .data('action', 'unfollow')
+                        .removeClass('btn-primary')
+                        .addClass('btn-secondary');
+                } else {
+                    $this.html('<i class="fas fa-user-plus"></i> Follow')
+                        .data('action', 'follow')
+                        .removeClass('btn-secondary')
+                        .addClass('btn-primary');
+                }
+                
+                $('.follower-count').text(response.follower_count + ' Followers');
+            } else {
+                console.error('Failed to follow/unfollow');
+            }
+        },
+        error: function(error) {
+            console.error("Error from server:", error);
+        }
+    });
+});
+
+
+  </script>
 
 {% endblock %}

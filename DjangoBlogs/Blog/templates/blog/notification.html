@@ -1,0 +1,62 @@
+{% extends 'blog/base.html'%}
+
+{% block body %}
+<div class="container ">
+    <h2 class="mb-4">Notifications</h2>
+
+    {% if notifications %}
+    <div>
+        {% for notification in notifications %}
+        <div class="card mb-3 notification-card {% if not notification.is_read %}notification-unread{% endif %}">
+            <div class="card-body d-flex align-items-center shadow-sm">
+                <img src="{{notification.sender.profile.profile_pic.url}}" width="50px" height="50px" style="border-radius: 50%; margin-right: 15px;">
+
+                <!-- Icon based on notification type -->
+                <div style="flex-grow: 1;">
+                    {% if notification.type == "comment" %}
+                    <i class="far fa-comment text-dark mx-2"></i>
+                    {% elif notification.type == "like" %}
+                    <i class="fas fa-heart text-danger mx-2"></i>
+                    {% elif notification.type == "follow" %}
+                    <i class="fas fa-user-plus mx-2"></i>
+                    {% endif %}
+
+                    <!-- Notification text -->
+                    {% if notification.type == "like" %}
+                      <a href="/post-details/{{notification.post.slug}}/" class="text-decoration-none text-dark"><span class="ml-2">{{ notification.message }}</span></a>
+                    {% elif notification.type == "comment" %}
+                      <a href="/post-details/{{notification.post.slug}}/#comments" class="text-decoration-none text-dark"><span class="ml-2">{{ notification.message }}</span></a>
+                    {% else %}
+                      <span class="ml-2">{{ notification.message }}</span>
+                    {% endif %}            
+                </div>
+
+                <!-- Time since notification -->
+                <small class="text-muted">
+                    {{ notification.timestamp|timesince }} ago
+                </small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p class="text-muted">You have no new notifications.</p>
+    {% endif %}
+</div>
+
+<!-- Additional CSS for the hover effect and notification card styling -->
+<style>
+    .notification-card:hover {
+        background-color: #f4f4f4; 
+        cursor: pointer;
+    }
+
+    .notification-card .card-body {
+        padding: 10px 20px; 
+    }
+    .notification-unread {
+    background-color: #d0d6f9; 
+}
+
+</style>
+{% endblock %}

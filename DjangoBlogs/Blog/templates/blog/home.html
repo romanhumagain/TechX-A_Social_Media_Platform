@@ -4,13 +4,16 @@
 <!-- Search Bar -->
 <form autocomplete="off">
     <div class="input-group mb-4">
-        <input type="text" class="form-control" name="search" placeholder="Search articles or authors..."
+        <input type="text" class="form-control" name="search" placeholder="Search articles..."
             aria-label="Search">
         <button class="btn btn-outline-secondary" type="submit" id="search-button"><i
                 class="fas fa-search"></i></button>
     </div>
 </form>
 {% endblock %}
+
+{% block notification_count %}{{notification_count}}{% endblock %}
+
 {% block body %}
 {% for post in posts %}
 <article class="media content-section">
@@ -40,7 +43,7 @@
         <h3 class="mt-2"><a class="article-title" href="{% url 'post-details' post.slug %}">{{ post.title }}</a></h3>
         <p class="article-content" style="display: inline;">{{ post.content|truncatewords:120 }}</p>
         {% if post.content|wordcount > 120 %}
-        <a href="{% url 'post-details' post.slug %}" class="read-more-link">Read More</a>
+        <a href="{% url 'post-details' post.slug %}" class="read-more-link text-info">Read More</a>
         {% endif %}
 
         

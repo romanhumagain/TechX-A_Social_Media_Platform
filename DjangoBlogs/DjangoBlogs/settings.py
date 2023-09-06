@@ -84,6 +84,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'Blog.context_processors.notification_count',
             ],
         },
     },
@@ -179,3 +180,71 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+
+# ===== SETTINGS FOR CUSTOM ADMIN PANEL ===== #
+
+JAZZMIN_SETTINGS = {
+    # title of the window (Will default to current_admin_site.site_title if absent or None)
+    "site_title": "TechBlog Admin",
+
+    # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_header": "TechBlog",
+
+    # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
+    "site_brand": "TechBlog",
+
+    # Logo to use for your site, must be present in static files, used for brand on top left
+    "site_logo": "images/techicon.png",
+    
+    #  "login_logo": None
+    
+     # Welcome text on the login screen
+    "welcome_sign": "Welcome to the TechBlog-Admin Site",
+    
+    # Copyright on the footer
+    "copyright": "TechBlog- A Blogging Platform",
+    
+    # Whether to display the side menu
+    "show_sidebar": True,
+
+    # Whether to aut expand the menu
+    "navigation_expanded": False,
+    
+    "search_model": ["auth.User"],
+    
+    # Links to put along the top menu
+    "topmenu_links": [
+
+        # Url that gets reversed (Permissions can be added)
+        {"name": "Home",  "url": "admin:index", "permissions": ["auth.view_user"]},
+
+        # external url that opens in a new window (Permissions can be added)
+        # {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+        
+        # for the techblog website
+        {"name": "TechBlog-Site", "url": "http://127.0.0.1:8000/"},
+
+        # model admin to link to (Permissions checked against model)
+        {"model": "auth.User"},
+
+        # App with dropdown menu to all its models pages (Permissions checked against models)
+        {"app": "books"},
+    ],
+
+    #############
+    # User Menu #
+    #############
+
+    # Additional links to include in the user menu on the top right ("app" url type is not allowed)
+    "usermenu_links": [
+        {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
+        {"model": "auth.user"}
+    ],
+    
+    
+}
+JAZZMIN_UI_TWEAKS = {
+    "theme": "flatly",
+}
+

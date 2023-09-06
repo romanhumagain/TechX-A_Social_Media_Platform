@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import PostListView , PostDetailsView , PostCreateView , PostUpdateView , PostDeleteView , UserProfileDetailsView , PostCommentView ,LikePostView , CommentDeleteView
+from .views import PostListView , PostDetailsView , PostCreateView , PostUpdateView , PostDeleteView , UserProfileDetailsView , PostCommentView ,LikePostView , CommentDeleteView, ViewNotification,  search_user
 
 # making the routes for the urls
 urlpatterns = [
@@ -12,5 +12,6 @@ urlpatterns = [
     path('user/profile-details/<slug:slug>/' , UserProfileDetailsView.as_view() , name="user-profile-details"),
     path('like_post/<int:post_id>/', LikePostView.as_view(), name='like_post'),
     path('delete/comment/<int:comment_id>/', CommentDeleteView.as_view(), name='delete_comment'),
-
+    path('notification/', ViewNotification.as_view(), name = 'notification'),
+    path('search/', search_user, name='search_user'),
 ]
