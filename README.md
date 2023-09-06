@@ -1,5 +1,5 @@
 <h1>TechBlog 🌐</h1>
-<p>📱 <strong>TechBlog</strong> is a dynamic blogging platform where users can share their thoughts, stories, and expertise. Built using Django, this platform offers user authentication, and the ability to post, edit, and manage articles seamlessly.</p>
+<p>📱 <strong>TechBlog</strong> is a dynamic blogging platform where users can share their thoughts, stories, and expertise. Built using Django, this platform offers user authentication, and the ability to post, edit, and manage articles seamlessly, with the aim to buid the unique social media platform.</p>
 <h2>Features 🛠️</h2>
 <ul>
     <li>✍️ <strong>Express Yourself:</strong> Seamlessly post articles encompassing your thoughts, stories, and technical knowledge.</li>
