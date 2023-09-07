@@ -97,7 +97,7 @@ class UserProfileDetailsView(LoginRequiredMixin, View):
         is_following = Follow.objects.filter(follower = request.user.profile , followed = profile).exists()
         user = profile.user
         posts = BlogPost.objects.filter(author = user).order_by('-date_posted')
-        paginator = Paginator(posts , 2)
+        paginator = Paginator(posts , 5)
         page = request.GET.get('page' , 1)
         page_obj = paginator.get_page(page)
         
@@ -202,13 +202,18 @@ class CommentDeleteView(LoginRequiredMixin, UserPassesTestMixin, View):
         
 class ViewNotification(LoginRequiredMixin , View):
     def get(self, request , *args , **kwargs):
+        today = timezone.now().date()
         notifications = Notification.objects.filter(receiver = request.user).order_by('-timestamp')
         
         for notification in notifications:
             notification.is_read = True
             notification.save()
             
-        context = {'notifications':notifications}
+        paginator = Paginator(notifications , 8)
+        page = request.GET.get('page' , 1)
+        page_obj = paginator.get_page(page)
+            
+        context = {'page_obj':page_obj, 'today':today}
 
         return render(request, 'blog/notification.html' , context)
 

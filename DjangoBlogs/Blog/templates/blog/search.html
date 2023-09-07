@@ -42,8 +42,15 @@
                             
                             <!-- Follower count -->
                             <p class="text-muted">{{ user.profile.follower_count }} Followers</p>
+                             
+                            {% if user == request.user %}
+                            <a href="{% url 'user_profile' %}" class="btn btn-secondary">View Profile</a>
                             
+
+                            {% else %}
                             <a href="{% url 'user-profile-details' user.profile.slug  %}" class="btn btn-secondary">View Profile</a>
+
+                            {% endif %}
                         </div>
                     </div>
                 </div>

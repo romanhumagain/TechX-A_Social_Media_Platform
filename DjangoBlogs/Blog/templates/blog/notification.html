@@ -4,13 +4,14 @@
 <div class="container ">
     <h2 class="mb-4">Notifications</h2>
 
-    {% if notifications %}
+    {% if page_obj %}
     <div>
-        {% for notification in notifications %}
+        {% for notification in page_obj %}
         <div class="card mb-3 notification-card {% if not notification.is_read %}notification-unread{% endif %}">
             <div class="card-body d-flex align-items-center shadow-sm">
+                <a href="{% url 'user-profile-details' notification.sender.profile.slug  %}" class="text-decoration-none">
                 <img src="{{notification.sender.profile.profile_pic.url}}" width="50px" height="50px" style="border-radius: 50%; margin-right: 15px;">
-
+                </a>   
                 <!-- Icon based on notification type -->
                 <div style="flex-grow: 1;">
                     {% if notification.type == "comment" %}
@@ -38,6 +39,53 @@
             </div>
         </div>
         {% endfor %}
+
+        <div class="container mt-5">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+        
+                    <!-- Display 'First' button only if not on the first page -->
+                    {% if not page_obj.number == 1 %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page=1" aria-label="First"><span
+                                aria-hidden="true">&laquo;&laquo;</span></a>
+                    </li>
+                    {% endif %}
+        
+                    <!-- Display 'Previous' button only if there's a previous page -->
+                    {% if page_obj.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}" aria-label="Previous"><span
+                                aria-hidden="true">&laquo;</span></a>
+                    </li>
+                    {% endif %}
+                    {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                    <li class="page-item active">
+                        <span class="page-link">{{ num }}</span>
+                    </li>
+                    {% elif num > page_obj.number|add:'-2' and num < page_obj.number|add:'2' %} <li class="page-item">
+                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                        </li>
+                        {% endif %}
+                        {% endfor %}
+        
+                        <!-- Display 'Next' and 'Last' buttons only if there's a next page -->
+                        {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}" aria-label="Next"><span
+                                    aria-hidden="true">&raquo;</span></a>
+                        </li>
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}" aria-label="Last"><span
+                                    aria-hidden="true">&raquo;&raquo;</span></a>
+                        </li>
+                        {% endif %}
+                </ul>
+            </nav>
+        </div>
+
+
     </div>
     {% else %}
     <p class="text-muted">You have no new notifications.</p>

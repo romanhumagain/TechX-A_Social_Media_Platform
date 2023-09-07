@@ -68,10 +68,23 @@ class Notification(models.Model):
      return f"Notification for {self.receiver}: {self.message}"
    
    
-class MessageApp(models.Model):
-  receiver = models.ForeignKey(User , on_delete=models.CASCADE , related_name='receiving_person')
-  sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sending_person')
-  message = models.TextField()
+class ChatRoom(models.Model):
+    receiver = models.ForeignKey(User, on_delete=models.CASCADE, related_name='received_chats')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_chats')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ['receiver', 'sender']  
+        
+class Message(models.Model):
+    chatroom = models.ForeignKey(ChatRoom, on_delete=models.CASCADE, related_name='messages')
+    sender = models.ForeignKey(User, on_delete=models.CASCADE) 
+    text_content = models.TextField()
+    file = models.FileField(upload_to='chat_files', null=True, blank=True)
+    image = models.ImageField(upload_to='chat_images', null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
   
    
    
