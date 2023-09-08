@@ -3,6 +3,8 @@ from django.utils import timezone
 from django.contrib.auth.models import User
 from Blog.utils import generate_slugs
 from django.urls import reverse
+from Blog.manager import BlogPostManager
+ 
 # Create your models here.
 
 class BlogPost(models.Model):
@@ -13,6 +15,10 @@ class BlogPost(models.Model):
   image = models.ImageField(null= True , blank=True, upload_to='blog_image')
   date_posted = models.DateTimeField(default = timezone.now)
   likes_count = models.IntegerField(null=True, default=0)
+  is_archived = models.BooleanField(default=False)
+  
+  objects = BlogPostManager()
+  all_objects = models.Manager()
   
   # to create the slug field..
   def save(self, *args, **kwargs):

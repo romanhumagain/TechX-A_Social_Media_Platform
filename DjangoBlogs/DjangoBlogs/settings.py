@@ -44,7 +44,7 @@ INSTALLED_APPS = [
 ]
 
 EXTERNAL_APPS = [
-    'Blog',
+    'Blog.apps.BlogConfig',
     'Users.apps.UsersConfig',
     'crispy_forms',
     'crispy_bootstrap4',
