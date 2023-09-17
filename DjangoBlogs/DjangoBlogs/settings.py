@@ -46,12 +46,27 @@ INSTALLED_APPS = [
 EXTERNAL_APPS = [
     'Blog.apps.BlogConfig',
     'Users.apps.UsersConfig',
+    'two_factor_authentication',
+    
     'crispy_forms',
     'crispy_bootstrap4',
+    
+    # === for oAuth === #
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
+    'django_user_agents',
+    
+    # == for the two factor authentication
+    'django_otp',
+    'django_otp.plugins.otp_static',
+    'django_otp.plugins.otp_totp',
+    'django_otp.plugins.otp_email', 
+    'two_factor',
+    'two_factor.plugins.phonenumber',  
+    'two_factor.plugins.email',  
+    'widget_tweaks',
     
 ]
 INSTALLED_APPS+=EXTERNAL_APPS
@@ -62,8 +77,10 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django_otp.middleware.OTPMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_user_agents.middleware.UserAgentMiddleware',
 ]
 
 AUTHENTICATION_BACKENDS = [
@@ -128,7 +145,9 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
+
+TIME_ZONE = 'Asia/Kathmandu'
+
 
 USE_I18N = True
 
@@ -155,7 +174,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap4"
 CRISPY_TEMPLATE_PACK = "bootstrap4"
 
-LOGIN_URL = '/user/login/'
+# LOGIN_URL = '/user/login/'
 
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
@@ -248,3 +267,8 @@ JAZZMIN_UI_TWEAKS = {
     "theme": "flatly",
 }
 
+# === For the two factor authentication ===
+LOGIN_URL = 'two_factor:login'
+
+# this one is optional
+# LOGIN_REDIRECT_URL = 'two_factor:profile'

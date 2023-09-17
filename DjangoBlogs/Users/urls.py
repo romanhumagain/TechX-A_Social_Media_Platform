@@ -1,6 +1,6 @@
 from django.urls import path
 from django.contrib.auth import views as auth_views
-from Users.views import register_user, LoginView , UpdateProfileView , ProfileDetailsView , follow, unfollow
+from Users.views import register_user, LoginView , UpdateProfileView , ProfileDetailsView, follow, unfollow, confirm_login_activity
 urlpatterns = [
   path('register/', register_user , name="register_user" ),
   path('login/', LoginView.as_view() , name="login_user" ),
@@ -13,7 +13,7 @@ urlpatterns = [
   path('password-reset/complete/' , auth_views.PasswordResetCompleteView.as_view(template_name = 'users/password_reset_complete.html'), name='password_reset_complete'),
   path('follow/<slug:slug>/', follow, name='follow'),
   path('unfollow/<slug:slug>/', unfollow, name='unfollow'),
-
-  
-  
+  path('password_change/', auth_views.PasswordChangeView.as_view(template_name ='users/password_change.html') , name='password_change'),
+  path('password_change_done/', auth_views.PasswordChangeDoneView.as_view(template_name = 'users/password_change_done.html') , name='password_change_done'),
+  path('confirm_activity/', confirm_login_activity , name="confirm_activity" ),
 ]

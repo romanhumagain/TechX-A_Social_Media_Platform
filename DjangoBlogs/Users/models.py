@@ -27,7 +27,20 @@ class Profile(models.Model):
             resized_size = (350, 350)
             image.thumbnail(resized_size)
             image.save(self.profile_pic.path)
-            
+           
+class LoginDetail(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    device_type = models.CharField(max_length=100)
+    browser = models.CharField(max_length=100)
+    os = models.CharField(max_length=100)
+    node_device_name = models.CharField(max_length=200, null=True, default=None)
+    processor = models.CharField(max_length=200, null= True, default=None )
+    login_date = models.DateTimeField(auto_now_add=True)
+    is_read = models.BooleanField(null=True, default=False)
+    
+    def __str__(self):
+        return f"{self.user.username} logged in from {self.device_type} with {self.browser} on {self.os}"
+    
             
 class Follow(models.Model):
     follower = models.ForeignKey(Profile , related_name='following_set', on_delete=models.CASCADE)

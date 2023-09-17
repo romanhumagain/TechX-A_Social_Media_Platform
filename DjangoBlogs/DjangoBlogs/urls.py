@@ -20,6 +20,7 @@ from Blog.urls import *
 from Users.urls import *
 from django.conf import settings
 from django.conf.urls.static import static
+from two_factor.urls import urlpatterns as tf_urls
 
 admin.site.site_header = "TechBlog Admin - Roman"
 admin.site.site_title = "TechBlog Admin Panel"
@@ -27,6 +28,7 @@ admin.site.index_title = "TechBlog Admin Panel"
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include(tf_urls)),
     path('', include('Blog.urls')),
     path('accounts/' ,include('allauth.urls')),
     path('user/', include('Users.urls')),

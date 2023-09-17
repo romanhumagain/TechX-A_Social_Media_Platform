@@ -1,10 +1,11 @@
 from django.utils import timezone
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.http import Http404, JsonResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib import messages
 from django.views import View
 from django.contrib.auth import authenticate, login
+import pyotp
 from .forms import UserRegisterForm , UserLoginForm , UserUpdateForm , ProfileUpdateForm
 from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
@@ -13,7 +14,9 @@ from django.views.generic import DetailView
 from django.contrib.auth.mixins import LoginRequiredMixin , UserPassesTestMixin
 from Blog.models import BlogPost, Like , Notification
 from django.core.paginator import Paginator
-from . models import Profile , Follow 
+from . models import Profile , Follow , LoginDetail
+from Users.otp import send_otp
+from datetime import datetime
 
 def register_user(request):
     if request.method == 'POST':
@@ -48,14 +51,54 @@ class LoginView(View):
         if user is not None:
             login(request, user)
             return redirect('/')
+        
+            # send_otp(request)
+            # username = request.session.get('username')
+            # return redirect('otp')
+            
         else:
             messages.error(request ,'Invalid Credentials')
             return redirect('login_user')
+        
+# === dead code ==== #
+def verify_otp(request):
+    if request.method == "POST":
+        otp = request.POST['otp']
+        username = request.session.get('username')
+        
+        otp_secret_key = request.session.get('otp_secret_key')
+        otp_valid_date = request.session.get('otp_valid_date')
+        
+        if otp_secret_key and otp_valid_date is not None:
+            valid_until = datetime.fromisoformat(otp_valid_date)
+            if valid_until > datetime.now():
+                totp = pyotp.TOTP(otp_secret_key, interval=60)
+                if totp.verify(otp):
+                    user = get_object_or_404(User, username = username )
+                    login(request, user)
+                    
+                    del request.session['otp_secret_key']
+                    del request.session['otp_valid_date']
+                    print("working")
+                else:
+                    messages.error(request, "Invalid Code")       
+                
+            else:
+             messages.error(request, "Sessioned expired !!")  
+             print("EXPIRED")     
+                   
+        else:
+            messages.error(request, "something went wrong !!")       
+            
+        
+    return render(request, 'users/otp.html')
+
 
 class ProfileDetailsView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
     model = User
     template_name = 'users/profile.html'
     context_object_name = 'profile_user'
+
 
     def get_object(self, queryset=None):
         return self.request.user
@@ -94,6 +137,10 @@ class ProfileDetailsView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
         
         context['followers'] = followers
         context['followings'] = followings
+        
+        login_details = LoginDetail.objects.filter(user = self.request.user, is_read = False).order_by('-login_date')
+        context['login_details'] = login_details
+        
         
         context['title'] = 'Profile'
         return context
@@ -181,3 +228,18 @@ def unfollow(request, slug):
         login_user_profile.save()
 
     return JsonResponse({'success': True, 'follower_count': target_profile.follower_count,'following_count': login_user_profile.following_count })
+
+@login_required
+def confirm_login_activity(request):
+    
+    not_confirmed_activity = LoginDetail.objects.filter(user = request.user, is_read = False)
+    
+    for detail in not_confirmed_activity:
+        detail.is_read = True
+        detail.save()
+    
+    return render(request, 'users/profile.html')
+
+    
+
+        

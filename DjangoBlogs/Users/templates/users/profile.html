@@ -1,5 +1,6 @@
 {% extends "blog/base.html" %}
 {% load static %}
+
 {% block search_bar %}
 <form autocomplete="off">
   <div class="input-group mb-4">
@@ -8,6 +9,49 @@
   </div>
 </form>
 {% endblock %}
+{% block nav-end-menu %}
+
+<ul class="navbar-nav">
+  <li class="nav-item dropdown">
+      <a href="#" class="nav-item nav-link text-white position-relative mx-1 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa fa-cog"></i> Account Settings
+          {% if not login_activity_count <= 0 %}
+          <span class="position-absolute top-1 start-100 translate-middle badge rounded-circle bg-danger ms-n3">
+              {{ login_activity_count }}
+              <span class="visually-hidden">unread notifications</span>
+          </span>
+          {% endif %}
+      </a>
+      <ul class="dropdown-menu dropdown-menu-dark">
+        <li>
+          <a class="dropdown-item" href="#" data-bs-toggle="modal" data-bs-target="#loginDetailsModel">
+              <i class="fa fa-user-circle"></i> Login Details
+              {% if not login_activity_count <= 0 %}
+              <i class="fa fa-exclamation-circle text-danger ms-2"></i>  <!-- Alert Icon -->
+              {% endif %}
+          </a>
+      </li>
+      
+          <li>
+              <a class="dropdown-item" href="/account/two_factor/setup/">
+                  <i class="fa fa-lock"></i> Two Factor Authentication
+              </a>
+          </li>
+          <li>
+              <a class="dropdown-item" href="{% url 'password_change' %}">
+                  <i class="fa fa-key"></i> Change Password
+              </a>
+          </li>
+          <li>
+              <a class="dropdown-item" href="{% url 'logout_user' %}">
+                  <i class="fa fa-sign-out-alt"></i> Logout
+              </a>
+          </li>
+      </ul>
+  </li>
+</ul>
+
+{% endblock%}
 {% block body %}
 <style>
   .logo-admin {
@@ -89,6 +133,33 @@
     background-color: #f3f3f3;
     /* Very light gray for hover effect */
   }
+  .navbar-nav .dropdown-menu {
+    border: none;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+}
+
+.nav-item.nav-link {
+    transition: color 0.3s;
+}
+
+.nav-item.nav-link:hover {
+    color: #FFD700; /* gold color for hover effect */
+}
+
+.dropdown-item {
+    transition: background-color 0.3s;
+}
+
+.dropdown-item:hover {
+    background-color: #333;  /* darken background on hover */
+    color: white;
+}
+
+/* Font Awesome icons as an example */
+.nav-item .fa {
+    margin-right: 8px;
+}
+
 </style>
 
 
@@ -386,4 +457,52 @@ $('.follow-btn').on('click', function(e) {
 
 </script>
 
+
+<!-- Modal for the login details -->
+<div class="modal fade" id="loginDetailsModel" tabindex="-1" aria-labelledby="loginDetailsModelLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Login Details</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      {% if login_details %}
+      <div class="modal-body compact-content">
+        {% for detail in login_details %}
+        <div class="card">
+          <div class="card-body">
+            <div class="mb-1">
+              <strong>Device Type:</strong> {{ detail.device_type }}
+            </div>
+            <div class="mb-1">
+              <strong>Browser:</strong> {{ detail.browser }}
+            </div>
+            <div class="mb-1">
+              <strong>Operating System:</strong> {{ detail.os }}
+            </div>
+            <div class="mb-1">
+              <strong>Device Name:</strong> {{ detail.node_device_name }}
+            </div>
+            <div class="mb-1">
+              <strong>Processor:</strong> {{ detail.processor }}
+            </div>
+            <div class="mb-1">
+              <strong>Login Date:</strong> {{ detail.login_date|date:"F j, Y, g:i A" }}
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="modal-footer justify-content-center">
+        <a href="{% url 'confirm_activity' %}" class="text-decoration-none text-center">Confirm Activity</a>
+        <p class="text-muted">Before confirming, ensure all activities are familiar.</p>
+      </div>
+      {% else %}
+      <div class="modal-body">
+        <p class="text-muted">No activity to show !!</p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
 {% endblock %}

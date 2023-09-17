@@ -1,0 +1,17 @@
+{% load i18n %}
+
+<div class="my-4">
+    {% if cancel_url %}
+    <a href="{{ cancel_url }}" class="btn btn-outline-danger mr-2">{% trans "Cancel" %}</a>
+    {% endif %}
+
+    {% if wizard.steps.prev %}
+    <button name="wizard_goto_step" type="submit" value="{{ wizard.steps.prev }}" class="btn btn-outline-secondary mr-2">
+        <i class="fas fa-arrow-left align-middle mr-1"></i> {% trans "Back" %}
+    </button>
+    {% endif %}
+    
+    <button type="submit" class="btn btn-primary">
+        {% trans "Next" %} <i class="fas fa-arrow-right align-middle ml-1"></i>
+    </button>
+</div>

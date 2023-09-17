@@ -1,4 +1,9 @@
 {% extends "blog/base.html" %}
+
+{% block nav-end-menu %}
+<a class="nav-item nav-link text-dark user-badge mx-2" href="{% url 'user_profile' %}"><i class="fas fa-user"></i> {{ user.username }}</a>
+{% endblock %}
+
 {% block body %}
 <div class="content-section">
     <div class="card ">

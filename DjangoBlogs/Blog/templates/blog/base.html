@@ -134,12 +134,11 @@
                             <span class="visually-hidden">unread notifications</span>
                         </span>
                         {% endif %}
-                        
                     </a>
-                    <a class="nav-item nav-link text-dark user-badge mx-2" href="{% url 'user_profile' %}"><i class="fas fa-user"></i> {{ user.username }}</a>
-                    <a class="nav-item nav-link fw-medium" href="{% url 'logout_user' %}" style="color: rgb(179, 34, 34);">Logout</a>
+                    {% block nav-end-menu %}
+                    {% endblock %}
                     {% else %}
-                    <a class="nav-item nav-link text-white mr-3" href="{% url 'login_user' %}">Login</a>
+                    <a class="nav-item nav-link text-white mr-3" href="/account/login/">Login</a>
                     <a class="nav-item nav-link text-white" href="{% url 'register_user' %}">Register</a>
                     {% endif %}
                 </div>
