@@ -12,14 +12,14 @@ class Profile(models.Model):
     follower_count = models.IntegerField(null=True, default=0)
     following_count = models.IntegerField(null=True, default=0)
     following = models.ManyToManyField('self' , through = 'Follow' , related_name='followers' , symmetrical=False)
+    
     def __str__(self) -> str:
         return f'{self.user.username} Profile'
     
     def save(self, *args, **kwargs):
         if not self.pk:
             self.slug = generate_slugs(Profile, self.user.username)
-            
-        super().save(*args, **kwargs)  # First save the model
+        super().save(*args, **kwargs)  
 
         image = Image.open(self.profile_pic.path)
 
