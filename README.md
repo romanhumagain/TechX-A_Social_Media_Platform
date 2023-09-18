@@ -5,7 +5,7 @@
     <li>✍️ <strong>Express Yourself:</strong> Seamlessly post articles encompassing your thoughts, stories, and technical knowledge.</li>
     <li>🗣️ <strong>Engage and Interact:</strong> Dive into discussions with the ability to comment on posts. Registered users can actively engage by responding to                   posts, liking content, and even viewing other users' profiles.</li>
     <li>🔗 <strong>Share with Ease:</strong> Found something interesting? With one-click, users can share their favorite content on LinkedIn.</li>
-    <li>🔗 <strong>Two Factor Authentication:</strong> Allowing users to obtain verification codes through Google Authenticator via QR codes or through email. </li>
+    <li>🔒 <strong>Two Factor Authentication:</strong> Allowing users to obtain verification codes through Google Authenticator via QR codes or through email. </li>
     <li>👤 <strong>Personalized User Profiles:</strong> Every user gets a unique profile, making it easier to track and manage your articles and also shows the number               of followers and so on.</li>
     <li>🔔 <strong>Notifications:</strong> Whenever someone likes your content, follows you, or drops a comment, you'll know right away. It's all about keeping you                  updated .</li>
     <li>🔄 <strong>Full Control:</strong> Update your articles as you evolve. Our edit feature ensures your content remains up-to-date.</li>
