@@ -205,13 +205,13 @@ SOCIALACCOUNT_PROVIDERS = {
 
 JAZZMIN_SETTINGS = {
     # title of the window (Will default to current_admin_site.site_title if absent or None)
-    "site_title": "TechBlog Admin",
+    "site_title": "TechX Admin",
 
     # Title on the login screen (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_header": "TechBlog",
+    "site_header": "TechX",
 
     # Title on the brand (19 chars max) (defaults to current_admin_site.site_header if absent or None)
-    "site_brand": "TechBlog",
+    "site_brand": "TechX",
 
     # Logo to use for your site, must be present in static files, used for brand on top left
     "site_logo": "images/techicon.png",
@@ -219,10 +219,10 @@ JAZZMIN_SETTINGS = {
     #  "login_logo": None
     
      # Welcome text on the login screen
-    "welcome_sign": "Welcome to the TechBlog-Admin Site",
+    "welcome_sign": "Welcome to the TechX-Admin Site",
     
     # Copyright on the footer
-    "copyright": "TechBlog- A Blogging Platform",
+    "copyright": "TechX",
     
     # Whether to display the side menu
     "show_sidebar": True,
@@ -242,7 +242,7 @@ JAZZMIN_SETTINGS = {
         # {"name": "Support", "url": "https://github.com/farridav/django-jazzmin/issues", "new_window": True},
         
         # for the techblog website
-        {"name": "TechBlog-Site", "url": "http://127.0.0.1:8000/"},
+        {"name": "TechX-Site", "url": "http://127.0.0.1:8000/"},
 
         # model admin to link to (Permissions checked against model)
         {"model": "auth.User"},

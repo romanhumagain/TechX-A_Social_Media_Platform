@@ -1,7 +1,15 @@
 {% extends "blog/base.html" %}
 
 {% block nav-end-menu %}
-<a class="nav-item nav-link text-dark user-badge mx-2" href="{% url 'user_profile' %}"><i class="fas fa-user"></i> {{ user.username }}</a>
+<a class="nav-item nav-link text-white user-badge position-relative mx-1" href="{% url 'user_profile' %}">
+    <i class="fas fa-user-circle"></i> {{ user.username }}
+    {% if not login_activity_count <= 0 %}
+    <span class="position-absolute top-1 start-100 translate-middle badge rounded-circle bg-danger ms-n2">
+        {{ login_activity_count }}
+        <span class="visually-hidden">unread notifications</span>
+    </span>
+    {% endif %}
+</a>
 {% endblock %}
 
 {% block body %}

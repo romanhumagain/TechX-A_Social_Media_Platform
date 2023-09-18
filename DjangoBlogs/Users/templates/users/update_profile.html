@@ -1,11 +1,24 @@
 {% extends 'blog/base.html' %}
 {% load crispy_forms_tags %}
+
+{% block nav-end-menu %}
+<a class="nav-item nav-link text-white user-badge position-relative mx-1" href="{% url 'user_profile' %}">
+    <i class="fas fa-user-circle"></i> {{ user.username }}
+    {% if not login_activity_count <= 0 %}
+    <span class="position-absolute top-1 start-100 translate-middle badge rounded-circle bg-danger ms-n2">
+        {{ login_activity_count }}
+        <span class="visually-hidden">unread notifications</span>
+    </span>
+    {% endif %}
+</a>
+{% endblock %}
+
 {% block body %}
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card border-secondart shadow-lg">
-                <div class="card-header bg-secondary text-white">
+                <div class="card-header text-white"  style="background-color: #555454;">
                     <h4 class="text-center mb-0">Edit Profile</h4>
                 </div>
                 <div class="card-body py-5">

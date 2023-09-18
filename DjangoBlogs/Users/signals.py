@@ -42,7 +42,7 @@ def send_email_to_user(sender , instance , created , **kwargs):
     message = (
       f"<p>Hello <strong>{instance.username}</strong>,</p>"
       "<br>"
-      "Warm greetings from <strong>Tech Blog Team</strong>! We're delighted to welcome you to our community of tech enthusiasts, writers, and readers. "
+      "Warm greetings from <strong>TechX Team</strong>! We're delighted to welcome you to our community of tech enthusiasts, writers, and readers. "
       "From the latest in AI to breakthroughs in cybersecurity, get ready to explore a world of innovation and insights."
       "<br><br>"
       "If you ever have questions or ideas, our virtual door is always open."
@@ -50,7 +50,7 @@ def send_email_to_user(sender , instance , created , **kwargs):
       "Happy reading and writing!"
       "<br>"
       "Warmly,<br>"
-      "The <strong> Tech Blog </strong> Team"
+      "The <strong> TechX </strong> Team"
   )
     send_email(subject=subjects, message=message, to=to) 
   
@@ -86,7 +86,7 @@ def get_login_details(sender, request, user, **kwargs):
     subject = "SECURITY ALERT !!"
     message = (
     f"<p>Hello <strong>{user.username}</strong>,</p>"
-    "<p>We noticed a new login to your TechBlog account.</p>"
+    "<p>We noticed a new login to your TechX account.</p>"
     "<strong>Details of the login:</strong>"
     "<ul>"
         f"<li><strong>Device:</strong> {device}</li>"
@@ -105,7 +105,7 @@ def get_login_details(sender, request, user, **kwargs):
     "</ol>"
     "<p>Your security is our top priority. Regularly update your password and always use unique passwords for different online services.</p>"
     "<p>Best Regards,<br>"
-    "The Tech-Blog Team</p>"
+    "The TechX Team</p>"
     )
     to = user.email
     send_email(subject=subject, message=message, to=to)

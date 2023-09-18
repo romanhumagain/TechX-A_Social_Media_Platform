@@ -2,7 +2,15 @@
 {% load crispy_forms_tags %}
 
 {% block nav-end-menu %}
-<a class="nav-item nav-link text-dark user-badge mx-2" href="{% url 'user_profile' %}"><i class="fas fa-user"></i> {{ user.username }}</a>
+<a class="nav-item nav-link text-white user-badge position-relative mx-1" href="{% url 'user_profile' %}">
+    <i class="fas fa-user-circle"></i> {{ user.username }}
+    {% if not login_activity_count <= 0 %}
+    <span class="position-absolute top-1 start-100 translate-middle badge rounded-circle bg-danger ms-n2">
+        {{ login_activity_count }}
+        <span class="visually-hidden">unread notifications</span>
+    </span>
+    {% endif %}
+</a>
 {% endblock %}
 
 {% block body %}
@@ -11,8 +19,8 @@
     <div class="row justify-content-center">
         <div class="col-md-12">
             <div class="card border-secondary shadow-lg">
-                <div class="card-header bg-secondary text-white text-center">
-                    <h4>Create Blog Post</h4>
+                <div class="card-header text-white text-center" style="background-color: #555454;">
+                    <h4>Write a Tech Article</h4>
                 </div>
                 <div class="card-body">
                     <form method="POST" class="m-3 custom-blog-form" enctype="multipart/form-data" novalidate>

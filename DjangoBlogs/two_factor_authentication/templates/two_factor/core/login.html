@@ -68,6 +68,20 @@ h1 {
 
 
   <h1>{% block title %}{% trans "Login" %}{% endblock %}</h1>
+
+  {% if messages %}
+      {% for message in messages %}
+      <div
+        class="alert alert-{% if message.tags == 'error' %}danger{% else %}{{ message.tags }}{% endif %} alert-dismissible fade show mt-3"
+        role="alert">
+        <i
+          class="{% if message.tags == 'error' %}fas fa-exclamation-circle{% elif message.tags == 'success' %}fas fa-check-circle{% elif message.tags == 'info' %}fas fa-info-circle{% elif message.tags == 'warning' %}fas fa-exclamation-triangle{% else %}fas fa-bell{% endif %} me-2"></i>
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+      </div>
+      {% endfor %}
+  {% endif %}
+
   {% if wizard.form.non_field_errors %}
 <div class="alert alert-danger" role="alert">
     {% for error in wizard.form.non_field_errors %}

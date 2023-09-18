@@ -12,9 +12,9 @@
 
     
     {% if title %}
-    <title>Tech Blog - {{title}}</title>
+    <title>TechX - {{title}}</title>
     {% else %}
-    <title>Tech Blog</title>
+    <title>TechX</title>
     {% endif %}
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
@@ -97,13 +97,36 @@
         border: 1px solid #333;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     }
+
+    .logo-text {
+    font-family: 'Arial', sans-serif;
+    font-size: 25px;
+    background: linear-gradient(45deg, #059898, #e8e8e8); /* Gradient: From blue to light gray */
+    -webkit-background-clip: text; /* Clip the background to the text */
+    color: transparent; /* Make the text color transparent to reveal the background gradient */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.logo-highlight {
+    background: linear-gradient(45deg, #f13bdb, #fd0404); /* Gradient: From orange to light red */
+    -webkit-background-clip: text; 
+    color: transparent;
+    font-size: 31px;
+    font-weight: bold;
+    text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+}
+
+.custom-navbar {
+    background-color: #3c3c3c; 
+    border-bottom: 1px solid #333; 
+}
 </style>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-secondary text-white fixed-top">
+    <nav class="navbar navbar-expand-lg navbar-light custom-navbar text-white fixed-top">
 
         <div class="container">
             <a class="navbar-brand" href="/">
-                <span class="logo-text">Tech<span class="logo-highlight">Blog</span></span>
+                <span class="logo-text">Tech<span class="logo-highlight fs-3 fw-bolder">X</span></span>
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup"
                 aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
@@ -124,7 +147,7 @@
                         </div>
                     </form>
                 
-                    <a class="nav-item nav-link text-white mx-1" href="{% url 'post-create' %}"><i class="fas fa-feather-alt"></i> Post Blog</a>
+                    <a class="nav-item nav-link text-white mx-1" href="{% url 'post-create' %}"><i class="fas fa-feather-alt"></i> Create a Post</a>
                 
                     <a class="nav-item nav-link text-white position-relative mx-1" href="{% url 'notification' %}">
                         Notification

@@ -13,8 +13,8 @@
 {% endblock %}
 
 {% block nav-end-menu %}
-<a class="nav-item nav-link text-dark user-badge position-relative mx-1" href="{% url 'user_profile' %}">
-    <i class="fas fa-user"></i> {{ user.username }}
+<a class="nav-item nav-link text-white user-badge position-relative mx-1" href="{% url 'user_profile' %}">
+    <i class="fas fa-user-circle"></i> {{ user.username }}
     {% if not login_activity_count <= 0 %}
     <span class="position-absolute top-1 start-100 translate-middle badge rounded-circle bg-danger ms-n2">
         {{ login_activity_count }}
@@ -22,7 +22,6 @@
     </span>
     {% endif %}
 </a>
-
 {% endblock %}
 
 {% block notification_count %}{{notification_count}}{% endblock %}

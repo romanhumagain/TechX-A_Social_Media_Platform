@@ -10,14 +10,36 @@
 {% endblock %}
 
 {% block nav-end-menu %}
-<a class="nav-item nav-link text-dark user-badge mx-2" href="{% url 'user_profile' %}"><i class="fas fa-user"></i> {{ user.username }}</a>
+<a class="nav-item nav-link text-white user-badge position-relative mx-1" href="{% url 'user_profile' %}">
+    <i class="fas fa-user-circle"></i> {{ user.username }}
+    {% if not login_activity_count <= 0 %}
+    <span class="position-absolute top-1 start-100 translate-middle badge rounded-circle bg-danger ms-n2">
+        {{ login_activity_count }}
+        <span class="visually-hidden">unread notifications</span>
+    </span>
+    {% endif %}
+</a>
 {% endblock %}
 
 {% block body %}
+<style>
+   .profile-pic {
+  box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5); 
+  transition: transform 0.5s ease-out, box-shadow 0.5s ease-out; 
+  transform-origin: center;
+}
+
+.profile-pic:hover {
+  transform: scale(1.1) ; 
+  box-shadow: 0px 5px 20px rgba(0, 0, 0, 0.7); 
+}
+</style>
+
+
 <div class="container mt-5">
   <div class="row">
     <div class="col-md-4 text-center">
-      <img src="{{target_user.profile.profile_pic.url}}" alt="{{ target_user.username }}'s Profile Picture" class="mb-2"
+      <img src="{{target_user.profile.profile_pic.url}}" alt="{{ target_user.username }}'s Profile Picture" class="mb-2 profile-pic"
         style="border-radius: 50%; width: 180px; height: 180px" />
     </div>
     <div class="col-md-8">
