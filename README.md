@@ -19,7 +19,7 @@
 <h2>Technology Stack 📚</h2>
 <dl>
     <dt>Backend:</dt>
-    <dd>🖥️ Crafted with the powerful <strong>Django</strong> framework (Python).</dd>
+    <dd>🖥️ Crafted with the powerful python <strong>Django</strong> framework.</dd>
     <dt>Frontend:</dt>
     <dd>🎨 Responsive and intuitive design using HTML and Bootstrap.</dd>
     <dt>Database:</dt>
